@@ -1,4 +1,4 @@
-angular.module('myApp', ['ngRoute'])
+angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
   .config(function($routeProvider) {
     /*var resolveProjects = {
@@ -9,8 +9,8 @@ angular.module('myApp', ['ngRoute'])
    
     $routeProvider
       .when('/', {
-        controller:'TodoListController as todoList',
-        templateUrl:'template/home.html'
+        controller:'TodoListController',
+        templateUrl:'template/todo.html'
       })
       .when('/about', {
         controller:'TodoListController as todoList',
@@ -19,6 +19,10 @@ angular.module('myApp', ['ngRoute'])
       .when('/edit', {
         controller:'TodoListController as todoList',
         templateUrl:'template/edit.html'
+      })
+      .when('/beers', {
+        controller: 'BeerCounter',
+        templateUrl: 'template/beerCounter.html'
       })
       .otherwise({
         redirectTo:'/'
@@ -53,4 +57,22 @@ angular.module('myApp', ['ngRoute'])
       });
     };
 
+  })
+
+  .controller('BeerCounter', function($scope, $locale) {
+    $scope.beers = [0, 1, 2, 3, 4, 5, 6];
+    if ($locale.id == 'en-us') {
+      $scope.beerForms = {
+        0: 'no beers',
+        one: '{} beer',
+        other: '{} beers'
+      };
+    } else {
+      $scope.beerForms = {
+        0: 'žiadne pivo',
+        one: '{} pivo',
+        few: '{} pivá',
+        other: '{} pív'
+      };
+    }
   });
