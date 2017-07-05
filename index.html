@@ -41,6 +41,66 @@
     <h2>Add Router</h2>
     <div ng-view></div>
 
+    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-database.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyAHLGIuByAL6vrTfG7kbRtAwwf7kaCkt9k",
+        authDomain: "starterproject-4e320.firebaseapp.com",
+        databaseURL: "https://starterproject-4e320.firebaseio.com",
+        projectId: "starterproject-4e320",
+        storageBucket: "",
+        messagingSenderId: "866187325341"
+      };
+      firebase.initializeApp(config);
+
+      var database = firebase.database();
+      
+      // WRITE TO DB
+      function writeUserData(userId, username, email) {
+        database.ref('users/' + userId).set({
+          username,
+          email
+        });
+      }
+
+      // EG WRITE TO DB
+      // writeUserData('ABC123','candice','candybar@gmail.com');
+      
+      // REMOVE FROM DB
+      function removeUserData(userId) {
+        database.ref('users/' + userId).remove();
+      }
+
+      // EG REMOVE FROM DB
+      // removeUserData("ABC123")
+
+      // UPDATE DB
+      function updateUserData(userId, username, email) {
+        database.ref('users/' + userId).update({
+          username,
+          email
+        });
+      }
+
+      // EG UPDATE DB
+      // updateUserData('ABC123','candy','omw@gmail.com');
+
+      // RETRIEVE DB ONCE ONLY
+      /*database.ref('/users').once('value').then(function(snapshot) {
+        console.log('once >>>', snapshot.val());
+      });*/
+
+      // RESPOND TO UPDATES AND INITIAL DATA LOAD
+      database.ref('/users').on('value', function(snapshot) {
+        console.log('updated >>>', snapshot.val());
+      });
+
+
+    </script>
+
   </body>
 
 </html>
