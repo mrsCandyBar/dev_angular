@@ -13,37 +13,13 @@
 
   <body>
 
-    <!-- <h2>Todo</h2>
-    <div ng-controller="TodoListController as todoList">
-    
-      <span>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
-    
-      [ <a href="" ng-click="todoList.archive()">archive</a> ]
-    
-      <ul class="unstyled">
-        <li ng-repeat="todo in todoList.todos">
-          <label class="checkbox">
-            <input type="checkbox" ng-model="todo.done">
-            <span class="done-{{todo.done}}">{{todo.text}}</span>
-          </label>
-        </li>
-      </ul>
-    
-      <form ng-submit="todoList.addTodo()">
-        <input type="text" ng-model="todoList.todoText"  size="30"
-               placeholder="add new todo here">
-        <input class="btn-primary" type="submit" value="add">
-      </form>
-    </div> -->
-
-
     <!-- START -->
     <h2>Add Router</h2>
     <div ng-view></div>
 
     <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-database.js"></script>
     <script>
       // Initialize Firebase
       var config = {
@@ -58,6 +34,8 @@
 
       var database = firebase.database();
       
+
+      // CRUD
       // WRITE TO DB
       function writeUserData(userId, username, email) {
         database.ref('users/' + userId).set({
@@ -65,17 +43,6 @@
           email
         });
       }
-
-      // EG WRITE TO DB
-      // writeUserData('ABC123','candice','candybar@gmail.com');
-      
-      // REMOVE FROM DB
-      function removeUserData(userId) {
-        database.ref('users/' + userId).remove();
-      }
-
-      // EG REMOVE FROM DB
-      // removeUserData("ABC123")
 
       // UPDATE DB
       function updateUserData(userId, username, email) {
@@ -85,17 +52,67 @@
         });
       }
 
+      // REMOVE FROM DB
+      function removeUserData(userId) {
+        database.ref('users/' + userId).remove();
+      }
+
+      // EG WRITE TO DB
+      // writeUserData('ABC123','candice','candybar@gmail.com');
+
       // EG UPDATE DB
       // updateUserData('ABC123','candy','omw@gmail.com');
 
-      // RETRIEVE DB ONCE ONLY
-      /*database.ref('/users').once('value').then(function(snapshot) {
-        console.log('once >>>', snapshot.val());
-      });*/
+      // EG REMOVE FROM DB
+      // removeUserData("ABC123")
 
-      // RESPOND TO UPDATES AND INITIAL DATA LOAD
-      database.ref('/users').on('value', function(snapshot) {
-        console.log('updated >>>', snapshot.val());
+
+
+      // LISTEN TO AUTHORIZATION STATE CHANGES
+      function checkAuthState() {
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            console.log('logged >>>', user);
+
+            // RETRIEVE DB ONCE ONLY
+            /*database.ref('/users').once('value').then(function(snapshot) {
+              console.log('once >>>', snapshot.val());
+            });*/
+
+            // RESPOND TO UPDATES AND INITIAL DATA LOAD
+            database.ref('/users').on('value', function(snapshot) {
+              console.log('updated >>> listen to db', snapshot.val());
+              }, function(err) {
+              console.log('denied >>>', err);
+            });
+            // ...
+          } else {
+            // User is signed out.
+            // ...
+            console.log('not >>>', user);
+
+            // DEACTIVATE UPDATES TO DB
+            database.ref('/users').off('value', function(snapshot) {
+              console.log('updated >>> not listening anymore', snapshot.val());
+              }, function(err) {
+              console.log('denied >>>', err);
+            });
+          }
+        });
+      };
+
+
+      // AUTHORIZE WITH EMAIL AND PASSWORD
+      firebase.auth().signInWithEmailAndPassword(username, password).then((response) => {
+        console.log('passed >>>', response);
+        checkAuthState();
+
+      }, (error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log('failed >>>', errorMessage);
+        // ...
       });
 
 
