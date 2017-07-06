@@ -5,7 +5,7 @@
         <span>Number: {{ 98765.4321 | number }}</span><br>
       </pane>
       <pane title="Pluralization">
-        <div ng-controller="BeerCounter">
+        <div ng-controller="BeersControls">
           <div ng-repeat="beerCount in beers">
             <ng-pluralize count="beerCount" when="beerForms"></ng-pluralize>
           </div>
