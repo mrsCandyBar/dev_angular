@@ -1,4 +1,7 @@
-var globalMenuItems = ['home', 'about', 'edit', 'todo', 'beers'];
+var globalMenuItems = ['home', 'about', 'dashboard', 'todo', 'beers'];
+/*var globalMenuItems = ['home', 'about','contact'];
+var userMenuITems = ['dashboard', 'todo', 'archive'];
+var adminMenuItems = ['overview', 'users', 'todo', 'archive'];*/
     globalMenuItems = _createRouteObj(globalMenuItems);
     // Add submenu items
 
@@ -13,6 +16,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
         templateUrl: 'template/' + item.page + '.html'
       })
     });
+    // add subrouted items
    
     $routeProvider
       .otherwise({
@@ -25,7 +29,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
     let menu = this;
     menu.items = globalMenuItems;
 
-    // Update active menu tab on routeChange
+    // DONE : Update active menu tab on routeChange
     $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
         menu.activeRoot = current.$$route.originalPath
         menu.items.forEach(item => {
@@ -44,7 +48,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
 
   // Remove this and place as a option to edit data on dashboard
-  .controller('editControls', function($scope) {
+  .controller('dashboardControls', function($scope) {
     $scope.heading = 'Edit ';
   })
 

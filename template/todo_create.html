@@ -1,0 +1,39 @@
+<article class="contentHolder">
+
+	<button class="btn btn-primary">Back</button>
+
+	<h2>Create Todo</h2>
+
+	<form>
+
+		<div class="form-group">
+			<label for="exampleInputEmail1">Name</label>
+			<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+		</div>
+
+		<div class="form-group">
+			<label for="exampleInputPassword1">Description</label>
+			<textarea type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"></textarea>
+		</div>
+
+		<div class="contentHolder__form__radioHolder">
+			<div class="form-group col">
+				<label for="exampleInputPassword1">Status</label><br>
+				<input type="radio" name="status" value="waiting" checked> Waiting<br>
+			  	<input type="radio" name="status" value="busy"> Busy<br>
+			  	<input type="radio" name="status" value="done"> Done
+		  	</div>
+
+		  	<div class="form-group col">
+				<label for="exampleInputPassword1">Urgency</label><br>
+				<input type="radio" name="urgency" value="waiting" checked> Normal<br>
+			  	<input type="radio" name="urgency" value="busy"> Urgent<br>
+			  	<input type="radio" name="urgency" value="done"> Wait
+		  	</div>
+	  	</div>
+
+		<button type="submit" class="btn btn-primary">Submit</button>
+	  
+	</form>
+
+</article>

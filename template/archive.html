@@ -1,0 +1,22 @@
+<article class="contentHolder">
+
+	<h2>Archives</h2>
+	<h3>Completed Todos</h3>
+
+	<section class="contentHolder__btn-holder">
+		Filter by : 
+		<button class="btn btn-sm btn-default">Name</button>
+		<button class="btn btn-sm btn-default">Date</button>
+	</section>
+
+	<section ng-controller="todoControls as todoList">
+		<span><br>{{todoList.todos.length}} items</span>
+		<ul class="unstyled">
+			<li ng-repeat="todo in todoList.todos">
+				<label class="checkbox">{{todo.text}}</label>
+				<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
+				
+			</li>
+		</ul>
+	</section>
+</article>

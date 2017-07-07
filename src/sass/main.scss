@@ -3,18 +3,59 @@
   color: blue;
 }
 
+.mobileOnly { display: none; }
+
 /* ------ /Reset ------ */
 
-body {
+body { 
+	display: table;
+	width: 100%;
 
-	nav {
-		display: inline-block;
-		background: purple;
+	nav { 
+		position: absolute;
+		background: #efefef;
 		color: #fff;
 	}
 
 	main { 
-		background: #f00;
+		padding-top: 80px;
+		padding-bottom: 60px;
+		height: 100vh;
+		display: table-cell;
+		vertical-align: middle;
 	}
+
 }
 
+.contentHolder { 
+	margin: 0 5%;
+	max-width: 350px;
+	width: 90%;
+
+	form { 
+		margin: 30px 0px 0px;
+
+		textarea {
+			min-height: 100px;
+		}
+	}
+
+	.contentHolder__btn-holder {
+		button {
+			display: inline-block;
+			margin-bottom: 5px;
+		}
+	}
+
+	.contentHolder__comments {
+		margin: 30px 0px;
+	}
+
+	.contentHolder__form__radioHolder {
+		margin-bottom: 15px; 
+		.col {
+			width: 45%; 
+			display: inline-block;
+		}
+	}
+}

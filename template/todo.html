@@ -1,5 +1,36 @@
-<h2>Todo</h2>
-  <div ng-controller="todoControls as todoList">
+<article class="contentHolder">
+
+  <button class="btn btn-primary">Back</button>
+
+  <h3>
+    Todo Name<br>
+    <small>Todo Status</small>
+  </h3>
+
+  <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
+  
+  <section class="contentHolder__comments" ng-controller="todoControls as todoList">
+    <span>{{todoList.remaining()}} of {{todoList.todos.length}} comments</span>
+
+    <ul class="unstyled">
+      <li ng-repeat="todo in todoList.todos">
+        <h5>Username</h5>
+        {{todo.text}}
+
+        <button class="btn btn-sm btn-default">Reply</button>
+      </li>
+    </ul>
+
+  </section>
+
+  <button class="btn btn-lg btn-primary">Update Todo</button>
+  <button class="btn btn-lg btn-primary">Change Status</button>
+
+</article>
+
+
+
+<!-- <section ng-controller="todoControls as todoList">
     <span>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
     [ <a href="" ng-click="todoList.archive()">archive</a> ]
     <ul class="unstyled">
@@ -15,4 +46,4 @@
              placeholder="add new todo here">
       <input class="btn-primary" type="submit" value="add">
     </form>
-  </div>
+  </section> -->
