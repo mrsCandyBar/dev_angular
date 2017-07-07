@@ -1,5 +1,6 @@
 var globalMenuItems = ['home', 'about', 'edit', 'todo', 'beers'];
-    globalMenuItems = createRouteObj(globalMenuItems);
+    globalMenuItems = _createRouteObj(globalMenuItems);
+    // Add submenu items
 
 angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
@@ -20,13 +21,16 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
 
   // MENU
-  .controller('MenuControls', function() {
+  .controller('MenuControls', function($rootScope) {
     let menu = this;
     menu.items = globalMenuItems;
-    menu.select = ((selectedItem) => {
-      menu.items.forEach(item => {
-        item.isActive = (item === selectedItem) ? true : false;
-      });
+
+    // Update active menu tab on routeChange
+    $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
+        menu.activeRoot = current.$$route.originalPath
+        menu.items.forEach(item => {
+          item.isActive = (item.url.indexOf(menu.activeRoot) > -1) ? true : false;
+        });
     });
   })
 
@@ -94,8 +98,9 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   });
 
 
-// Additional functions
-function createRouteObj(arr) {
+
+// Additional private functions
+function _createRouteObj(arr) {
   let route = "index.html#!";
   let routeObj = [];
 
