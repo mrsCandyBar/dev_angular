@@ -15,11 +15,14 @@
 		<button class="btn btn-sm btn-default">Comments</button>
 	</section>
 
-	<section ng-controller="todoControls as todoList">
+	<section ng-controller="todoListControls as todoList">
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">
-				<a class="done-{{todo.done}}" href="index.html#!/todo/{{ todo.text }}">{{todo.text}}</a>
+				<a 	class="{{ todo.status === 'done' ? 'done-true' : '' }}" 
+					href="index.html#!/todo/{{ todo.id }}">
+					{{ todo.title }}
+				</a>
 			</li>
 		</ul>
 	</section>

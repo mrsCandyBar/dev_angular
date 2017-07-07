@@ -1,26 +1,26 @@
-<article class="contentHolder">
+<article class="contentHolder" ng-controller="todoControls">
 
   <h3>
-    Billy Bob's House of Fun
+    {{ todo.title }}
     <button class="btn btn-xs btn-default">Change</button><br>
     
-    <small>Busy</small> 
+    <small>{{ todo.status }}</small> 
     <button class="btn btn-xs btn-default">Change</button>
 
-    <small>( <i>Urgent</i> )</small> 
+    <small>( <i>{{ todo.urgency }}</i> )</small> 
     <button class="btn btn-xs btn-default">Change</button>
   </h3>
 
-  <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.  </p>
+  <p>{{ todo.description }}</p>
   <button class="btn btn-xs btn-default">Edit</button>
   
-  <section class="contentHolder__comments" ng-controller="todoControls as todoList">
+  <section class="contentHolder__comments" ng-show="todo.comments.length > 0">
     <span>{{todoList.remaining()}} of {{todoList.todos.length}} comments</span>
 
     <ul class="unstyled">
-      <li ng-repeat="todo in todoList.todos">
-        <h5>Username</h5>
-        {{todo.text}}
+      <li ng-repeat="comment in todo.comments">
+        <h5>{{ comment.name }}</h5>
+        {{ comment.text }}
 
         <button class="btn btn-sm btn-default">Reply</button>
       </li>
@@ -28,26 +28,7 @@
 
   </section>
 
+  <br><br>
   <button class="btn btn-primary" onclick="history.back()">Back</button>
 
 </article>
-
-
-
-<!-- <section ng-controller="todoControls as todoList">
-    <span>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
-    [ <a href="" ng-click="todoList.archive()">archive</a> ]
-    <ul class="unstyled">
-      <li ng-repeat="todo in todoList.todos">
-        <label class="checkbox">
-          <input type="checkbox" ng-model="todo.done">
-          <span class="done-{{todo.done}}">{{todo.text}}</span>
-        </label>
-      </li>
-    </ul>
-    <form ng-submit="todoList.addTodo()">
-      <input type="text" ng-model="todoList.todoText"  size="30"
-             placeholder="add new todo here">
-      <input class="btn-primary" type="submit" value="add">
-    </form>
-  </section> -->

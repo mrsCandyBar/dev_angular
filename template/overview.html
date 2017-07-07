@@ -12,25 +12,31 @@
 		<button class="btn btn-sm btn-primary">User</button>
 	</section>
 
-	<section ng-controller="todoControls as todoList">
+	<!-- <section ng-controller="todoListControls as todoList">
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} users</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">
-				by User Name<br>
+				by {{ todo.user }}<br>
 				<div class="todo">
-					<a href="index.html#!/todo/{{todo.text}}" class="done-{{todo.done}}">{{todo.text}}</a>
+					<a 	class="{{ todo.status === 'done' ? 'done-true' : '' }}" 
+						href="index.html#!/todo/{{ todo.id }}">
+						{{ todo.title }}
+					</a>
 				</div>
 			</li>
 		</ul>
-	</section>
+	</section> -->
 
-	<!-- 	<section ng-controller="todoControls as todoList">
+	<section ng-controller="todoListControls as todoList">
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} todos</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">
-				<a href="index.html#!/todo/{{todo.text}}" class="done-{{todo.done}}">{{todo.text}}</a>
-				<small><i> &nbsp;&nbsp;( by <a href="#">User Name</a>)</i></small>
+				<a 	class="{{ todo.status === 'done' ? 'done-true' : '' }}" 
+					href="index.html#!/todo/{{ todo.id }}">
+					{{ todo.title }}
+				</a>
+				<small><i> &nbsp;&nbsp;( by <a href="#">{{ todo.user }}</a>)</i></small>
 			</li>
 		</ul>
-	</section> -->
+	</section>
 </article>

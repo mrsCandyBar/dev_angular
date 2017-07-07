@@ -9,12 +9,13 @@
 		<button class="btn btn-sm btn-default">Date</button>
 	</section>
 
-	<section ng-controller="todoControls as todoList">
+	<section ng-controller="archiveControls as todoList">
 		<span><br>{{todoList.todos.length}} items</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">
-				<label class="checkbox">{{todo.text}}</label>
-				<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. </p>
+				<label class="checkbox">{{ todo.title }}</label>
+				<p>{{ todo.description }}</p>
+				<small><i>{{ todo.date }}</i></small>
 				
 			</li>
 		</ul>

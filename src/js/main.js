@@ -71,16 +71,31 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   .controller('overviewControls', function($scope) {
     $scope.heading = 'Welcome';
   })
-  .controller('archiveControls', function($scope) {
-    $scope.heading = 'About';
+  .controller('archiveControls', function() {
+    let todoList = this;
+    todoList.todos = [
+      {
+        id: 123,
+        user: 'MrAppleBottom',
+        title: 'title goes here',
+        description:'whoop whoop',
+        date: '12/05/89'
+    }];
   })
 
   // REDO, make this fit into firebase
-  .controller('todoControls', function() {
+  .controller('todoListControls', function() {
     let todoList = this;
     todoList.todos = [
-      {text:'learn AngularJS test', done:true},
-      {text:'build an AngularJS app', done:false}];
+      {
+        id: 123,
+        user: 'MrAppleBottom',
+        title: 'title goes here',
+        description:'whoop whoop',
+        status: 'waiting',
+        comments: 5,
+        urgency: 'on hold'
+      }];
  
     todoList.addTodo = function() {
       todoList.todos.push({text:todoList.todoText, done:false});
@@ -88,19 +103,24 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
     };
  
     todoList.remaining = function() {
-      var count = 0;
+      let count = 0;
       angular.forEach(todoList.todos, function(todo) {
-        count += todo.done ? 0 : 1;
+        count += todo.status === 'done' ? 0 : 1;
       });
       return count;
     };
- 
-    todoList.archive = function() {
-      var oldTodos = todoList.todos;
-      todoList.todos = [];
-      angular.forEach(oldTodos, function(todo) {
-        if (!todo.done) todoList.todos.push(todo);
-      });
+  })
+
+  // REDO, make this fit into firebase
+  .controller('todoControls', function($scope) {
+    $scope.todo = {
+      id: 123,
+      user: 'MrAppleBottom',
+      title: 'title goes here',
+      description:'whoop whoop',
+      status: 'waiting',
+      comments: 5,
+      urgency: 'on hold'
     };
   })
 
