@@ -1,11 +1,10 @@
 <article class="contentHolder">
 
 	<h2>Welcome User!</h2>
-	<button class="btn btn-sm btn-default">Edit Profile</button>
 
 	<h3>
 		<br>Todos
-		<button class="btn btn-primary">Create New Todo</button>
+		<a class="btn btn-primary" href="index.html#!/create/">Create New Todo</a>
 	</h3>
 
 	<section class="contentHolder__btn-holder">
@@ -20,17 +19,9 @@
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} remaining</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">
-				<label class="checkbox">
-					<input type="checkbox" ng-model="todo.done">
-					<a class="done-{{todo.done}}">{{todo.text}}</a>
-				</label>
+				<a class="done-{{todo.done}}" href="index.html#!/todo/{{ todo.text }}">{{todo.text}}</a>
 			</li>
 		</ul>
-
-		<br>
-		<button class="btn btn-primary">Update Status</button>
-		<button class="btn btn-primary">Delete</button>
-		<button class="btn btn-primary">Archive</button>
 	</section>
 
 </article>

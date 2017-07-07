@@ -1,7 +1,6 @@
 <article class="contentHolder">
 
 	<h2>Welcome User!</h2>
-	<button class="btn btn-sm btn-default">Edit Profile</button>
 
 	<h3><br>Todos</h3>
 
@@ -19,31 +18,19 @@
 			<li ng-repeat="todo in todoList.todos">
 				by User Name<br>
 				<div class="todo">
-					<input type="checkbox" ng-model="todo.done">
-					<a class="done-{{todo.done}}">{{todo.text}}</a>
+					<a href="index.html#!/todo/{{todo.text}}" class="done-{{todo.done}}">{{todo.text}}</a>
 				</div>
 			</li>
 		</ul>
-
-		<br>
-		<button class="btn btn-primary">Update Status</button>
-		<button class="btn btn-primary">Delete</button>
-		<button class="btn btn-primary">Archive</button>
 	</section>
 
 	<!-- 	<section ng-controller="todoControls as todoList">
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} todos</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">
-				<input type="checkbox" ng-model="todo.done">
-				<a class="done-{{todo.done}}">{{todo.text}}</a>
+				<a href="index.html#!/todo/{{todo.text}}" class="done-{{todo.done}}">{{todo.text}}</a>
 				<small><i> &nbsp;&nbsp;( by <a href="#">User Name</a>)</i></small>
 			</li>
 		</ul>
-
-		<br>
-		<button class="btn btn-primary">Update Status</button>
-		<button class="btn btn-primary">Delete</button>
-		<button class="btn btn-primary">Archive</button>
 	</section> -->
 </article>

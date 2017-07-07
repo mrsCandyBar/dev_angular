@@ -1,4 +1,4 @@
-var globalMenuItems = ['home', 'about', 'dashboard', 'todo', 'todo_create', 'overview', 'archive'];
+var globalMenuItems = ['home', 'about', 'dashboard', 'overview', 'archive'];
     globalMenuItems = _createRouteObj(globalMenuItems);
 
 angular.module('myApp', ['ngRoute', 'tabsComponent'])
@@ -27,6 +27,16 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
       }
     });
    
+    $routeProvider
+      .when('/todo/:name', {
+        controller: 'todoControls',
+        templateUrl: 'template/todo.html'
+      })
+      .when('/create', {
+        controller: 'todoControls',
+        templateUrl: 'template/todo_create.html'
+      });
+
     $routeProvider
       .otherwise({
         redirectTo:'/home'
