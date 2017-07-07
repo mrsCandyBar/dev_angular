@@ -1,22 +1,31 @@
-var globalMenuItems = ['home', 'about', 'dashboard', 'todo', 'beers'];
-/*var globalMenuItems = ['home', 'about','contact'];
-var userMenuITems = ['dashboard', 'todo', 'archive'];
-var adminMenuItems = ['overview', 'users', 'todo', 'archive'];*/
+var globalMenuItems = ['home', 'about', 'dashboard', 'todo', 'todo_create', 'overview', 'archive'];
     globalMenuItems = _createRouteObj(globalMenuItems);
-    // Add submenu items
 
 angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
   .config(function($routeProvider) {
+    let menuItem, menuName;
+    Object.keys(globalMenuItems).forEach((item) => {
+      menuItem = globalMenuItems[item];
+      menuName = menuItem['page']
 
-    // add option to replace templateUrl value
-    globalMenuItems.forEach((item) => {
-      $routeProvider.when('/' + item.page, {
-        controller: item.page + 'Controls',
-        templateUrl: 'template/' + item.page + '.html'
+      $routeProvider.when('/' + menuName, {
+        controller: menuName + 'Controls',
+        templateUrl: 'template/' + menuName + '.html'
       })
+
+      if (menuItem['submenu']) {
+        menuItem = menuItem['submenu'];
+        Object.keys(menuItem).forEach((subitem) => {
+          menuName = menuItem[subitem]['routeName']
+
+          $routeProvider.when('/' + menuName, {
+            controller: menuName + 'Controls',
+            templateUrl: 'template/' + menuName + '.html'
+          })
+        });
+      }
     });
-    // add subrouted items
    
     $routeProvider
       .otherwise({
@@ -31,10 +40,10 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
     // DONE : Update active menu tab on routeChange
     $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
-        menu.activeRoot = current.$$route.originalPath
-        menu.items.forEach(item => {
-          item.isActive = (item.url.indexOf(menu.activeRoot) > -1) ? true : false;
-        });
+      menu.activeRoot = current.$$route.originalPath
+      Object.keys(menu.items).forEach(item => {
+        menu.items[item]['isActive'] = (menu.items[item]['url'].indexOf(menu.activeRoot) > -1) ? true : false;
+      });
     });
   })
 
@@ -46,10 +55,14 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   .controller('aboutControls', function($scope) {
     $scope.heading = 'About';
   })
-
-  // Remove this and place as a option to edit data on dashboard
   .controller('dashboardControls', function($scope) {
-    $scope.heading = 'Edit ';
+    $scope.heading = 'Welcome';
+  })
+  .controller('overviewControls', function($scope) {
+    $scope.heading = 'Welcome';
+  })
+  .controller('archiveControls', function($scope) {
+    $scope.heading = 'About';
   })
 
   // REDO, make this fit into firebase
@@ -106,14 +119,32 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
 // Additional private functions
 function _createRouteObj(arr) {
   let route = "index.html#!";
-  let routeObj = [];
+  let routeObj = {};
 
   arr.forEach((page, index) => {
-    routeObj[index] = {
-      page,
-      url: route + '/' + page
+    if (page.indexOf('_') > -1) {
+      let menuOptions = page.split('_');
+      let mainMenuItem = menuOptions[0];
+      let subMenuItem = menuOptions[1];
+
+      if (!routeObj[mainMenuItem]['submenu']) {
+        routeObj[mainMenuItem]['submenu'] = {};
+      }
+
+      routeObj[mainMenuItem]['submenu'][subMenuItem] = {
+        page: subMenuItem,
+        routeName: page,
+        url: route + '/' + page
+      }
+
+    } else {
+      routeObj[page] = {
+        page,
+        url: route + '/' + page
+      }
     }
   });
 
+  console.log('obj >>', routeObj);
   return routeObj;
 }
