@@ -52,11 +52,10 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
     let menu = this;
     menu.items = globalMenuItems;
 
-    // DONE : Update active menu tab on routeChange
     $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
-      menu.activeRoot = current.$$route.originalPath
+      menu.activeRoot = current.$$route.templateUrl;
       Object.keys(menu.items).forEach(item => {
-        menu.items[item]['isActive'] = (menu.items[item]['url'].indexOf(menu.activeRoot) > -1) ? true : false;
+        menu.items[item]['isActive'] = (menu.activeRoot.indexOf(menu.items[item]['page']) > -1) ? true : false;
       });
     });
   })
