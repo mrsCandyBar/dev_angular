@@ -1,13 +1,17 @@
 <article class="contentHolder">
 
-	<h3>Welcome Stranger</h3>
-	<button class="btn btn-lg btn-primary">Login</button>
-	<button class="btn btn-lg btn-primary">Create an Account</button>
+	<h3>{{ heading }}</h3>
+	<button 
+		class="btn btn-lg btn-primary {{ account === 'active' ? 'active' : '' }}"
+		ng-click="toggleAccount('active')"
+		>Login</button>
+	<button 
+		class="btn btn-lg btn-primary {{ account === 'not-active' ? 'active' : '' }}"
+		ng-click="toggleAccount('not-active')"
+		>Create an Account</button>
 
-	<!-- <h2>Login to Your Account</h2>
-	
-	<form>
 
+	<form ng-show="account === 'active'">
 		<div class="form-group">
 			<label for="exampleInputEmail1">Email address</label>
 			<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
@@ -18,13 +22,10 @@
 			<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
 		</div>
 
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button type="submit" class="btn btn-primary">Login</button>
 	  
-	</form> -->
-
-	
-	<form>
-
+	</form>
+	<form ng-show="account === 'not-active'">
 		<div class="form-group">
 			<label for="exampleInputEmail1">Email address</label>
 			<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
@@ -41,7 +42,7 @@
 			</label>
 		</div>
 
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button type="submit" class="btn btn-primary">Create my Account</button>
 	  
 	</form>
 

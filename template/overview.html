@@ -4,13 +4,14 @@
 
 	<h3><br>Todos</h3>
 
-	<section class="contentHolder__btn-holder">
+	<section class="contentHolder__btn-holder" ng-controller="todoListControls as todoList">
 		Filter by : 
-		<button class="btn btn-sm btn-default">Name</button>
-		<button class="btn btn-sm btn-default">Urgency</button>
-		<button class="btn btn-sm btn-default">Status</button>
-		<button class="btn btn-sm btn-primary">User</button>
-	</section>
+		<a class="btn btn-sm btn-default" href="index.html#!/overview/name">Name</a>
+		<a class="btn btn-sm btn-default" href="index.html#!/overview/urgency">Urgency</a>
+		<a class="btn btn-sm btn-default" href="index.html#!/overview/status">Status</a>
+		<a class="btn btn-sm btn-primary" href="index.html#!/overview/user">User</a>
+	
+		<br><br>
 
 	<!-- <section ng-controller="todoListControls as todoList">
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} users</span>
@@ -27,7 +28,7 @@
 		</ul>
 	</section> -->
 
-	<section ng-controller="todoListControls as todoList">
+
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} todos</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">

@@ -28,6 +28,10 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
     });
    
     $routeProvider
+      .when('/overview/:filter', {
+        controller: 'todoControls',
+        templateUrl: 'template/overview.html'
+      })
       .when('/todo/:name', {
         controller: 'todoControls',
         templateUrl: 'template/todo.html'
@@ -60,7 +64,13 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   // PAGES  
   // Make this a dashboard
   .controller('homeControls', function($scope) {
-    $scope.heading = 'Welcome';
+    let main = $scope;
+    main.heading = 'Welcome Stranger!';
+    main.account = 'not-active';
+
+    main.toggleAccount = function(status) {
+      main.account = status;
+    }
   })
   .controller('aboutControls', function($scope) {
     $scope.heading = 'About';
@@ -84,31 +94,112 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
 
   // REDO, make this fit into firebase
-  .controller('todoListControls', function() {
+  .controller('todoListControls', function($route) {
+
     let todoList = this;
     todoList.todos = [
       {
         id: 123,
         user: 'MrAppleBottom',
-        title: 'title goes here',
+        title: 'Waiting Title goes here',
         description:'whoop whoop',
         status: 'waiting',
-        comments: 5,
+        comments: 1,
         urgency: 'on hold'
-      }];
+      },
+      {
+        id: 456,
+        user: 'TallyLongSocks',
+        title: 'busy Clean the dishes',
+        description:"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book",
+        status: 'busy',
+        comments: 5,
+        urgency: 'urgent'
+      },
+      {
+        id: 123,
+        user: 'WillyWonka',
+        title: 'Waiting Title goes here',
+        description:'whoop whoop',
+        status: 'waiting',
+        comments: 1,
+        urgency: 'urgent'
+      },
+      {
+        id: 789,
+        user: 'JumpyJerry',
+        title: 'busy Download PS Plus games',
+        description:"It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+        status: 'busy',
+        comments: 3,
+        urgency: 'on hold'
+      },
+      {
+        id: 123,
+        user: 'MrAppleBottom',
+        title: 'Waiting Title goes here',
+        description:'whoop whoop',
+        status: 'waiting',
+        comments: 1,
+        urgency: 'on hold'
+      },];
  
     todoList.addTodo = function() {
       todoList.todos.push({text:todoList.todoText, done:false});
       todoList.todoText = '';
     };
  
-    todoList.remaining = function() {
+    todoList.done = function() {
       let count = 0;
       angular.forEach(todoList.todos, function(todo) {
-        count += todo.status === 'done' ? 0 : 1;
+        count += todo.status === 'done' ? 1 : 0;
       });
       return count;
     };
+
+
+    if ($route.current.params) {
+      let filter = $route.current.params['filter'];
+      let sortedList = [];
+
+      if (filter != 'name') {
+        for(let todo = 0; todo < todoList['todos'].length;) {
+          let beforeFilterCheck = todoList['todos'].length;
+          let sortFilter = todoList['todos'][todo][filter];
+
+          for(let checkTodo = 0; checkTodo < todoList['todos'].length;) {
+            if (todoList['todos'][checkTodo][filter] === sortFilter) {
+              let filterMatch = todoList['todos'].splice(checkTodo, 1);
+              sortedList.push(filterMatch[0]);
+            } else {
+              checkTodo++;
+            }
+          }
+        }
+        todoList.todos = sortedList;
+
+      } else {
+        let allNames = [];
+        todoList['todos'].forEach((todo) => {
+          allNames[allNames.length] = todo.title;
+        });
+
+        allNames.sort();
+        let sortedList = [];
+        todoList['todos'].forEach((todo) => {
+          for(let name = 0; name < allNames.length; name++) {
+
+            if (allNames[name], allNames[name] === todo.title) {
+              sortedList[sortedList.length] = todo;
+            }
+          }
+        });
+
+        console.log('name >>', todoList['todos'], sortedList);
+        todoList['todos'] = sortedList;
+
+      }
+    }
   })
 
   // REDO, make this fit into firebase
