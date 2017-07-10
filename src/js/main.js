@@ -1,4 +1,4 @@
-var globalMenuItems = ['home', 'about', 'dashboard', 'overview', 'archive'];
+var globalMenuItems = ['home', 'about', 'overview', 'archive'];
     globalMenuItems = _createRouteObj(globalMenuItems);
 
 angular.module('myApp', ['ngRoute', 'tabsComponent'])
@@ -74,9 +74,6 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
   .controller('aboutControls', function($scope) {
     $scope.heading = 'About';
-  })
-  .controller('dashboardControls', function($scope) {
-    $scope.heading = 'Welcome';
   })
   .controller('overviewControls', function($scope) {
     $scope.heading = 'Welcome';
