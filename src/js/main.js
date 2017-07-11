@@ -41,7 +41,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
         templateUrl: 'template/todo.html'
       })
       .when('/create', {
-        controller: 'todoControls',
+        controller: 'createControls',
         templateUrl: 'template/todo_create.html'
       });
 
@@ -85,6 +85,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
 
   .controller('todoControls', function($scope) {
+    // get data from DB
     $scope.todo = TodoService.retrieveSingleTodo(Data.example[0]);
     $scope.editable = false;
 
@@ -93,7 +94,6 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
         
         let compareObj = JSON.stringify($scope.todo); 
         if ($scope.backup != compareObj) {
-          console.log('been edited');
           $scope.backup = JSON.stringify($scope.todo);
           // add command to update data to DB;
         }
@@ -107,6 +107,20 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
     $scope.cancel = function() {
       $scope.editable = !$scope.editable;
       $scope.todo = JSON.parse($scope.backup);
+    }
+  })
+
+  .controller('createControls', function($scope) {
+    // get data from DB
+    $scope.todo = TodoService.retrieveSingleTodo([]);
+    $scope.users = Data.users;
+    $scope.urgencies = Data.urgencies;
+    $scope.statuses = Data.statuses;
+
+    $scope.submit = function() {
+      // generate random UID for todo;
+      console.log('new update >>>', $scope.todo);
+      // add command to update data to DB;
     }
   })
 

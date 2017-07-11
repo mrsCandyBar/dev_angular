@@ -48,6 +48,9 @@ class Data {
 		    urgency: 'on hold'
 		  }
 		];
+		this.users = ['MrAppleBottom', 'JumpyJerry', 'WillyWonka', 'TallyLongSocks'];
+		this.statuses = ['waiting','busy','done'];
+		this.urgencies = ['waiting','urgent','onhold'];
 	}
 }
 

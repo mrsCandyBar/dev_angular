@@ -7,32 +7,46 @@
 	<form>
 
 		<div class="form-group">
-			<label for="exampleInputEmail1">Name</label>
-			<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+			<label for="Title">Title</label>
+			<input class="form-control" id="Title" 
+				placeholder="Title goes here..." 
+				ng-model="todo.title">
 		</div>
 
 		<div class="form-group">
-			<label for="exampleInputPassword1">Description</label>
-			<textarea type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"></textarea>
+			<label for="Description">Description</label>
+			<textarea class="form-control" id="Description" 
+				placeholder="Description for task goes here..." 
+				ng-model="todo.description"></textarea>
 		</div>
 
 		<div class="contentHolder__form__radioHolder">
 			<div class="form-group col">
-				<label for="exampleInputPassword1">Status</label><br>
-				<input type="radio" name="status" value="waiting" checked> Waiting<br>
-			  	<input type="radio" name="status" value="busy"> Busy<br>
-			  	<input type="radio" name="status" value="done"> Done
+				<label for="Status">Status</label><br>
+			  	<span ng-repeat="status in statuses">
+					<input type="radio" name="Status" value="{{ status }}" 
+						ng-model="todo.status"> {{ status }}<br>
+				</span>
 		  	</div>
 
 		  	<div class="form-group col">
-				<label for="exampleInputPassword1">Urgency</label><br>
-				<input type="radio" name="urgency" value="waiting" checked> Normal<br>
-			  	<input type="radio" name="urgency" value="busy"> Urgent<br>
-			  	<input type="radio" name="urgency" value="done"> Wait
+				<label for="Urgency">Urgency</label><br>
+			  	<span ng-repeat="urgency in urgencies">
+					<input type="radio" name="Urgency" value="{{ urgency }}" 
+						ng-model="todo.urgency"> {{ urgency }}<br>
+				</span>
+		  	</div>
+
+		  	<div class="form-group col">
+				<label for="User">User</label><br>
+				<span ng-repeat="user in users">
+					<input type="radio" name="User" value="{{ user }}" 
+						ng-model="todo.user"> {{ user }}<br>
+				</span>
 		  	</div>
 	  	</div>
 
-		<button type="submit" class="btn btn-primary">Submit</button>
+		<button type="submit" class="btn btn-primary" ng-click="submit();">Submit</button>
 	  
 	</form>
 
