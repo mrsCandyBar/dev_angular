@@ -8,7 +8,7 @@ class Data {
 		    title: 'Waiting Title goes here',
 		    description:'whoop whoop',
 		    status: 'waiting',
-		    comments: 1,
+		    comments: 3,
 		    urgency: 'on hold'
 		  },
 		  {

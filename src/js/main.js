@@ -66,25 +66,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
   // PAGES  
   // Make this a dashboard
-  .controller('homeControls', function($scope) {
-    let main = $scope;
-    main.heading = 'Welcome Stranger!';
-    main.account = 'not-active';
 
-    main.toggleAccount = function(status) {
-      main.account = status;
-    }
-  })
-
-  .controller('aboutControls', function($scope) {
-    $scope.heading = 'About';
-  })
-
-  .controller('overviewControls', function($scope) {
-    $scope.heading = 'Welcome User...';
-  })
-
-  // REDO, make this fit into firebase
   .controller('todoListControls', function($route) {
 
     let todoList = this;
@@ -100,6 +82,32 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
       todoList.todos.push({text:todoList.todoText, done:false});
       todoList.todoText = '';
     };
+  })
+
+  .controller('todoControls', function($scope) {
+    $scope.todo = TodoService.retrieveSingleTodo(Data.example[0]);
+    $scope.editable = false;
+
+    $scope.update = function() {
+      if ($scope.editable) {
+        
+        let compareObj = JSON.stringify($scope.todo); 
+        if ($scope.backup != compareObj) {
+          console.log('been edited');
+          $scope.backup = JSON.stringify($scope.todo);
+          // add command to update data to DB;
+        }
+
+      } else {
+        $scope.backup = JSON.stringify($scope.todo);
+      }
+      $scope.editable = !$scope.editable;
+    }
+
+    $scope.cancel = function() {
+      $scope.editable = !$scope.editable;
+      $scope.todo = JSON.parse($scope.backup);
+    }
   })
 
   // replace this with some fun stats based on user data returned
@@ -120,6 +128,24 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
         other: '{} pív'
       };
     }
+  })
+
+  .controller('homeControls', function($scope) {
+    let main = $scope;
+    main.heading = 'Welcome Stranger!';
+    main.account = 'not-active';
+
+    main.toggleAccount = function(status) {
+      main.account = status;
+    }
+  })
+
+  .controller('aboutControls', function($scope) {
+    $scope.heading = 'About';
+  })
+
+  .controller('overviewControls', function($scope) {
+    $scope.heading = 'Welcome User...';
   });
 
 

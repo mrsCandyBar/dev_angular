@@ -1,20 +1,34 @@
-<article class="contentHolder" ng-controller="todoControls">
+<article class="contentHolder">
 
-  <h3>
-    {{ todo.title }}
-    <button class="btn btn-xs btn-default">Change</button><br>
-    
-    <small>{{ todo.status }}</small> 
-    <button class="btn btn-xs btn-default">Change</button>
+  <button class="btn btn-xs btn-default" onclick="history.back()">Back</button>
+  <h3 class="contentHolder__todoHolder editable">
+    <span ng-show="!editable">{{ todo.title }}</span>
+    <input ng-show="editable" ng-model="todo.title" /><br>
 
-    <small>( <i>{{ todo.urgency }}</i> )</small> 
-    <button class="btn btn-xs btn-default">Change</button>
+    <small>
+      <span ng-show="!editable">{{ todo.status }}</span>
+      <div ng-show="editable" class="form-group col">
+        <input type="radio" name="status" value="waiting" checked> Waiting<br>
+        <input type="radio" name="status" value="busy"> Busy<br>
+        <input type="radio" name="status" value="done"> Done
+      </div>
+    </small>
+
+    <small>
+      <span ng-show="!editable">( <i>{{ todo.urgency }}</i> )</span>
+      <div ng-show="editable" class="form-group col">
+        <input type="radio" name="urgency" value="waiting" checked> Waiting<br>
+        <input type="radio" name="urgency" value="busy"> Urgent<br>
+        <input type="radio" name="urgency" value="done"> Done
+      </div>
+    </small> 
   </h3>
 
-  <p>{{ todo.description }}</p>
-  <button class="btn btn-xs btn-default">Edit</button>
   
-  <section class="contentHolder__comments" ng-show="todo.comments.length > 0">
+  <p ng-show="!editable">{{ todo.description }}</p>
+  <textarea ng-show="editable" class="form-control" ng-model="todo.description"></textarea>
+  
+  <section class="contentHolder__comments" ng-show="todo.comments > 0">
     <span>{{todoList.remaining()}} of {{todoList.todos.length}} comments</span>
 
     <ul class="unstyled">
@@ -25,10 +39,10 @@
         <button class="btn btn-sm btn-default">Reply</button>
       </li>
     </ul>
-
   </section>
 
   <br><br>
-  <button class="btn btn-primary" onclick="history.back()">Back</button>
+  <button class="btn btn-primary" ng-click="update()">{{ editable ? 'Save' : 'Edit' }}</button>
+  <button ng-show="editable" class="btn btn-primary" ng-click="cancel()">cancel</button>
 
 </article>

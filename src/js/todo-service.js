@@ -18,12 +18,16 @@ class TodoService {
 	}
 
 	filterResults(params, store) {
-      if (params != 'title') {
-        return _filterByProperty(params, store);
-      } else {
-       	return _filterByOrder(params, store);
-      }
-    } 
+    if (params != 'title') {
+      return _filterByProperty(params, store);
+    } else {
+     	return _filterByOrder(params, store);
+    }
+  } 
+
+  retrieveSingleTodo(id) {
+    return new TodoModel(id);
+  }
 }
 
 function _filterByProperty(filter, store) {

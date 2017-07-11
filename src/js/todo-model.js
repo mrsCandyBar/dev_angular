@@ -4,6 +4,7 @@ class TodoModel extends ModelProto {
 
 	constructor(rawObj) {
 		super();
+		this.id = '';
 		this.user = '';
 		this.title = '';
 		this.description = '';
