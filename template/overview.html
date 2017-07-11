@@ -1,15 +1,17 @@
 <article class="contentHolder">
 
-	<h2>Welcome User!</h2>
+	<h2>{{ heading }}</h2>
 
 	<h3><br>Todos</h3>
 
 	<section class="contentHolder__btn-holder" ng-controller="todoListControls as todoList">
 		Filter by : 
-		<a class="btn btn-sm btn-default" href="index.html#!/overview/name">Name</a>
-		<a class="btn btn-sm btn-default" href="index.html#!/overview/urgency">Urgency</a>
-		<a class="btn btn-sm btn-default" href="index.html#!/overview/status">Status</a>
-		<a class="btn btn-sm btn-primary" href="index.html#!/overview/user">User</a>
+
+		<a 	ng-repeat="filter in todoList.filters"
+			class="btn btn-sm btn-default {{ current.params.filter === filter ? 'active' : ''}}" 
+			href="index.html#!/overview/{{ filter }}">
+			{{ filter }}
+		</a>
 	
 		<br><br>
 
