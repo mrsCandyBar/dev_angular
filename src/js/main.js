@@ -1,36 +1,16 @@
+import Menu from './controller_menuControls.js';
+import StaticPage from './controller_staticControls.js';
 import TodoService from './todo-service.js';
 import Data from './todo-exampleData.js';
 
-var globalMenuItems = ['home', 'about', 'overview', 'archive'];
-    globalMenuItems = _createRouteObj(globalMenuItems);
-
+var globalMenuItems = Menu.buildMenu(['home', 'about', 'overview', 'archive']);
 
 angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
-  .config(function($routeProvider) {
-    let menuItem, menuName;
-    Object.keys(globalMenuItems).forEach((item) => {
-      menuItem = globalMenuItems[item];
-      menuName = menuItem['page']
+  .config(function($routeProvider) { 
+    Menu.setRoutesWithBuiltMenu($routeProvider, globalMenuItems); 
 
-      $routeProvider.when('/' + menuName, {
-        controller: menuName + 'Controls',
-        templateUrl: 'template/' + menuName + '.html'
-      })
-
-      if (menuItem['submenu']) {
-        menuItem = menuItem['submenu'];
-        Object.keys(menuItem).forEach((subitem) => {
-          menuName = menuItem[subitem]['routeName']
-
-          $routeProvider.when('/' + menuName, {
-            controller: menuName + 'Controls',
-            templateUrl: 'template/' + menuName + '.html'
-          })
-        });
-      }
-    });
-   
+    // set custom urls
     $routeProvider
       .when('/overview/:filter', {
         controller: 'overviewControls',
@@ -43,25 +23,18 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
       .when('/create', {
         controller: 'createControls',
         templateUrl: 'template/todo_create.html'
-      });
+      })
 
+    // set route for unknown routes
     $routeProvider
       .otherwise({
         redirectTo:'/home'
-      });
+      })
   })
 
   // MENU
-  .controller('MenuControls', function($rootScope) {
-    let menu = this;
-    menu.items = globalMenuItems;
-
-    $rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
-      menu.activeRoot = current.$$route.templateUrl;
-      Object.keys(menu.items).forEach(item => {
-        menu.items[item]['isActive'] = (menu.activeRoot.indexOf(menu.items[item]['page']) > -1) ? true : false;
-      });
-    });
+  .controller('MenuControls', function($rootScope) { 
+    Menu.initMenu(this, $rootScope, globalMenuItems) 
   })
 
   // PAGES  
@@ -123,7 +96,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
       // add command to update data to DB;
     }
   })
-
+/*
   // replace this with some fun stats based on user data returned
   .controller('beersControls', function($scope, $locale) {
     $scope.beers = [0, 1, 2, 3, 4, 5, 6];
@@ -142,56 +115,9 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
         other: '{} pív'
       };
     }
-  })
+  })*/
 
-  .controller('homeControls', function($scope) {
-    let main = $scope;
-    main.heading = 'Welcome Stranger!';
-    main.account = 'not-active';
-
-    main.toggleAccount = function(status) {
-      main.account = status;
-    }
-  })
-
-  .controller('aboutControls', function($scope) {
-    $scope.heading = 'About';
-  })
-
-  .controller('overviewControls', function($scope) {
-    $scope.heading = 'Welcome User...';
-  });
-
-
-
-// Additional private functions
-function _createRouteObj(arr) {
-  let route = "index.html#!";
-  let routeObj = {};
-
-  arr.forEach((page, index) => {
-    if (page.indexOf('_') > -1) {
-      let menuOptions = page.split('_');
-      let mainMenuItem = menuOptions[0];
-      let subMenuItem = menuOptions[1];
-
-      if (!routeObj[mainMenuItem]['submenu']) {
-        routeObj[mainMenuItem]['submenu'] = {};
-      }
-
-      routeObj[mainMenuItem]['submenu'][subMenuItem] = {
-        page: subMenuItem,
-        routeName: page,
-        url: route + '/' + page
-      }
-
-    } else {
-      routeObj[page] = {
-        page,
-        url: route + '/' + page
-      }
-    }
-  });
-
-  return routeObj;
-}
+  .controller('homeControls', function($scope)      { StaticPage.home($scope) })
+  .controller('aboutControls', function($scope)     { StaticPage.about($scope) })
+  .controller('overviewControls', function($scope)  { StaticPage.overview($scope) })
+  .controller('archiveControls', function($scope)   { StaticPage.overview($scope) })
