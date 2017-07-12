@@ -1,15 +1,15 @@
 
 class Menu {
 
-	buildMenu(globalMenuItems) {
-		return _createRouteObj(globalMenuItems);
+	buildMenu(menuItems) {
+		return _createRouteObj(menuItems);
 	}
 
-	setRoutesWithBuiltMenu($routeProvider, globalMenuItems) {
+	setRoutesWithBuiltMenu($routeProvider, menuItems) {
 	    let menuItem, menuName;
 
-	    Object.keys(globalMenuItems).forEach((item) => {
-	      menuItem = globalMenuItems[item];
+	    Object.keys(menuItems).forEach((item) => {
+	      menuItem = menuItems[item];
 	      menuName = menuItem['page']
 
 	      $routeProvider.when('/' + menuName, {
@@ -32,9 +32,9 @@ class Menu {
 	}
 
 
-	initMenu($scope, $rootScope, globalMenuItems) {
+	initMenu($scope, $rootScope, menuItems) {
 		let menu = $scope;
-		menu.items = globalMenuItems;
+		menu.items = menuItems;
 
 		$rootScope.$on('$routeChangeSuccess', function (e, current, pre) {
 			menu.activeRoot = current.$$route.templateUrl;
@@ -45,7 +45,6 @@ class Menu {
 	}
 };
 
-// Additional private functions
 function _createRouteObj(arr) {
   let route = "index.html#!";
   let routeObj = {};

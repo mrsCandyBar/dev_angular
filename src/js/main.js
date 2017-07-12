@@ -4,12 +4,12 @@ import TodoControls from './controller_todoControls.js';
 import Beer from './controller_beerControls.js';
 
 // Set single menu items
-var globalMenuItems = Menu.buildMenu(['home', 'about', 'overview', 'archive']);
+var menuItems = Menu.buildMenu(['home', 'about', 'overview', 'archive']);
 
 angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
   .config(function($routeProvider) { 
-    Menu.setRoutesWithBuiltMenu($routeProvider, globalMenuItems); 
+    Menu.setRoutesWithBuiltMenu($routeProvider, menuItems); 
 
     // set custom urls
     $routeProvider
@@ -34,7 +34,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
 
   // MENU
-  .controller('MenuControls',     function($rootScope)  { Menu.initMenu(this, $rootScope, globalMenuItems) })
+  .controller('MenuControls',     function($rootScope)  { Menu.initMenu(this, $rootScope, menuItems) })
   .controller('homeControls',     function($scope)      { StaticPage.home($scope) })
   .controller('aboutControls',    function($scope)      { StaticPage.about($scope) })
   .controller('overviewControls', function($scope)      { StaticPage.overview($scope) })
