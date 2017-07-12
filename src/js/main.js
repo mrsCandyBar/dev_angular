@@ -1,8 +1,9 @@
 import Menu from './controller_menuControls.js';
 import StaticPage from './controller_staticControls.js';
-import TodoService from './todo-service.js';
-import Data from './todo-exampleData.js';
+import TodoControls from './controller_todoControls.js';
+import Beer from './controller_beerControls.js';
 
+// Set single menu items
 var globalMenuItems = Menu.buildMenu(['home', 'about', 'overview', 'archive']);
 
 angular.module('myApp', ['ngRoute', 'tabsComponent'])
@@ -33,91 +34,17 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
 
   // MENU
-  .controller('MenuControls', function($rootScope) { 
-    Menu.initMenu(this, $rootScope, globalMenuItems) 
-  })
+  .controller('MenuControls',     function($rootScope)  { Menu.initMenu(this, $rootScope, globalMenuItems) })
+  .controller('homeControls',     function($scope)      { StaticPage.home($scope) })
+  .controller('aboutControls',    function($scope)      { StaticPage.about($scope) })
+  .controller('overviewControls', function($scope)      { StaticPage.overview($scope) })
+  .controller('archiveControls',  function($scope)      { StaticPage.overview($scope) })
 
-  // PAGES  
-  // Make this a dashboard
+  .controller('todoListControls', function($route)      { TodoControls.retrieveTodos(this, $route) })
+  .controller('todoControls',     function($scope)      { TodoControls.retrieveSingleTodo($scope) })
+  .controller('createControls',   function($scope)      { TodoControls.createTodo($scope) });
 
-  .controller('todoListControls', function($route) {
-
-    let todoList = this;
-    todoList.filters = TodoService.retrieveSearchFilters();
-    todoList.todos = TodoService.retrieveTodos(Data.example);
-
-    // filter data
-    if ($route.current.params) {
-      todoList.todos = TodoService.filterResults($route.current.params['filter'], todoList.todos);
-    }
- 
-    todoList.addTodo = function() {
-      todoList.todos.push({text:todoList.todoText, done:false});
-      todoList.todoText = '';
-    };
-  })
-
-  .controller('todoControls', function($scope) {
-    // get data from DB
-    $scope.todo = TodoService.retrieveSingleTodo(Data.example[0]);
-    $scope.editable = false;
-
-    $scope.update = function() {
-      if ($scope.editable) {
-        
-        let compareObj = JSON.stringify($scope.todo); 
-        if ($scope.backup != compareObj) {
-          $scope.backup = JSON.stringify($scope.todo);
-          // add command to update data to DB;
-        }
-
-      } else {
-        $scope.backup = JSON.stringify($scope.todo);
-      }
-      $scope.editable = !$scope.editable;
-    }
-
-    $scope.cancel = function() {
-      $scope.editable = !$scope.editable;
-      $scope.todo = JSON.parse($scope.backup);
-    }
-  })
-
-  .controller('createControls', function($scope) {
-    // get data from DB
-    $scope.todo = TodoService.retrieveSingleTodo([]);
-    $scope.users = Data.users;
-    $scope.urgencies = Data.urgencies;
-    $scope.statuses = Data.statuses;
-
-    $scope.submit = function() {
-      // generate random UID for todo;
-      console.log('new update >>>', $scope.todo);
-      // add command to update data to DB;
-    }
-  })
 /*
   // replace this with some fun stats based on user data returned
-  .controller('beersControls', function($scope, $locale) {
-    $scope.beers = [0, 1, 2, 3, 4, 5, 6];
-
-    if ($locale.id == 'en-us') {
-      $scope.beerForms = {
-        0: 'no beers',
-        one: '{} beer',
-        other: '{} beers'
-      };
-    } else {
-      $scope.beerForms = {
-        0: 'žiadne pivo',
-        one: '{} pivo',
-        few: '{} pivá',
-        other: '{} pív'
-      };
-    }
+  .controller('beersControls',    function($scope, $locale) { Beer.initTabs($scope, $locale)
   })*/
-
-  .controller('homeControls', function($scope)      { StaticPage.home($scope) })
-  .controller('aboutControls', function($scope)     { StaticPage.about($scope) })
-  .controller('overviewControls', function($scope)  { StaticPage.overview($scope) })
-  .controller('archiveControls', function($scope)   { StaticPage.overview($scope) })

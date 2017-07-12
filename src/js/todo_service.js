@@ -1,4 +1,4 @@
-import TodoModel from './todo-model.js';
+import TodoModel from './todo_model.js';
 
 class TodoService {
 

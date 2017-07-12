@@ -1,4 +1,4 @@
-import ModelProto from './model-prototype.js';
+import ModelProto from './model.js';
 
 class TodoModel extends ModelProto {
 
