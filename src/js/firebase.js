@@ -7,6 +7,7 @@ import Command from './firebase_commands.js';
 class Firebase {
 	
 	constructor() {
+    this.userID;
 		this.user;
     this.firebase = initDB();
 		this.database = this.firebase.database();
@@ -14,50 +15,63 @@ class Firebase {
     this.auth = this.firebase.auth();
 	}
 
-	logUserIn(account, userData) {
+  createUser(userData) {
+    let createUser = new Promise((resolve, reject) => {
+
+      User.create(userData).then((data) => {
+        Command.addUser(this.database, data.uid, userData);
+
+        this.logUserIn(userData).then((response) => {
+          resolve(response);
+        }, (error) => {
+          reject('user created but signin failed >>', error);
+        });
+        
+      }, (error) => {
+        reject('Oops something went wrong with your account creation', error);
+      });
+
+    });
+
+    return createUser;
+  }
+
+	logUserIn(userData) {
     let loginUser = new Promise((resolve, reject) => {
-  		if (!account) { 
-        //this._isUserLoggedIn();
+      Authorize.signIn(this.auth, userData).then((data) => {
+        this.userID = firebase.auth().currentUser.uid;
+        this.user = this._returnData('users/' + this.userId);
+        this.credential = data;
+        
+        resolve(this.user);
 
-      } else {
-        let user = {
-          email: 'candicekswartz@yahoo.com', //userData.email,
-          password: 'logMeIn' //userData.password
-        };
-
-  			Authorize.signIn(this.auth, user.email, user.password).then((data) => {
-          this.user = firebase.auth().currentUser;
-  				this.credential = data;
-  				resolve(this._returnUserData());
-
-  			}, (error) => {
-  				reject('Sign in attempt failed >>', error);
-  			});
-  		}
+      }, (error) => {
+        reject('Sign in attempt failed >>', error);
+      });
     });
 
     return loginUser;
 	}
 
-		_isUserLoggedIn(user, credential) {
+		/*_isUserLoggedIn(user, credential) {
 			Authorize.reAuthenticate(user, credential).then((resolve) => {
 				this.user = firebase.auth().currentUser;
 				this._returnUserData();
 
 			}, (error) => { 
         console.log('user is not logged in', error)});
-		}
+		}*/
 
-		_returnUserData() {
-			/*Query.data(this.database, '/users').then((dataRetrieved) =>{
-				// Do something with data once only;
-			});*/
+		_returnData(url) {
+			Query.data(this.database, url).then((dataRetrieved) =>{
+				return dataRetrieved;
+			});
 
-			Query.dataAndsubscribeToUpdates(this.database, '/users').then((data) =>{
+			/*Query.dataAndsubscribeToUpdates(this.database, '/users').then((data) =>{
 				// Do something with data and subscribe to data updates;
 			}, (error) => {
 				alert('Error returning user data >>', error)
-			});
+			});*/
 		}
 
 

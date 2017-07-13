@@ -1,18 +1,25 @@
 
 class Command {
 	
-	addUser(database, userId, username, email) {
+	addUser(database, userId, userData) {
 		database.ref('users/' + userId).set({
-			username,
-			email
+			id: userId,
+			name: userData.name,
+			email: userData.email,
+			organisation: userData.organisation,
+			admin: userData.admin,
+			password: userData.password
 		});
+		console.log('user created');
 	}
-	// addUser('ABC123','andy','andyb@gmail.com');
 
-	updateUser(database, userId, username, email) {
+	updateUser(database, userId, userData) {
 		database.ref('users/' + userId).update({
-			username,
-			email
+			id: userId,
+			name: userData.name,
+			email: userData.email,
+			organisation: userData.organisation,
+			admin: userData.admin
 		});
 	}
 	// updateUser('ABC123','candy','candy@gmail.com');

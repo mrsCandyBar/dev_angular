@@ -1,16 +1,36 @@
 
 class User {
 
+	create(user) {
+		let newUser = new Promise((resolve, reject) => {
+			if (user.email && user.password) {
+				firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+					.then((data) => {
+						resolve(data);
+
+					}, (error) => {
+					  	let errorCode = error.code;
+					  	let errorMessage = error.message;
+					  	reject(errorCode + ' : ' + errorMessage)
+					});
+			} else {
+				reject('Empty Data');
+			}
+		});
+
+		return newUser;
+	}
+
 	update(user, displayName, photoURL) {
 		let updates = new Promise((resolve, reject) => {
 			user.updateProfile({
 				displayName,
 				photoURL
 			}).then(function(data) {
-				resolve('user >>> updated', firebase.auth().currentUser);
+				resolve(firebase.auth().currentUser);
 
 			}, function(error) {
-				reject('user >>> update failed', error);
+				reject(error);
 			});
 		});
 

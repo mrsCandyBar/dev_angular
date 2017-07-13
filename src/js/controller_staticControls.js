@@ -2,6 +2,11 @@ import Firebase from './firebase.js';
 
 class StaticPage {
 
+	constructor() {
+		this.user;
+		this.isAdmin = false;
+	}
+
 	home($scope, $location, $route) {
 		let main = $scope;
 		main.heading = 'Welcome Stranger!';
@@ -10,6 +15,8 @@ class StaticPage {
 		main.login = {
 			email: '', 
 			password: '',
+			organisation: '',
+			name: '',
 			admin: false
 		}
 
@@ -18,12 +25,27 @@ class StaticPage {
 	  		main.action = (status === 'active') ? 'login' : 'create my account';
 		}
 		main.submit = function() {
-			Firebase.logUserIn(main.account, main.login).then((response) => {
-				$location.path('overview');
-				$route.reload();
-			}, (error) => {
-				alert('Sorry, login failed. Try again');
-			});
+			if (main.account === 'active') {
+				Firebase.logUserIn(main.login).then((response) => {
+					main.redirect();
+
+				}, (error) => {
+					alert('Sorry, login failed. Try again');
+				});
+
+			} else {
+				Firebase.createUser(main.login).then((response) => {
+					main.redirect();
+
+				}, (error) => {
+					console.log('oh crap >>>', error);
+				})
+			}
+		}
+
+		main.redirect = function() {
+			$location.path('overview');
+			$route.reload();
 		}
 	};
 
@@ -34,7 +56,8 @@ class StaticPage {
 	};
 
 	overview($scope) {
-		$scope.heading = 'Welcome User...';
+		console.log('user >>', Firebase.user)
+		$scope.heading = 'Welcome ' + 'User';
 	};
 }
 

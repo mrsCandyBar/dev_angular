@@ -1,23 +1,20 @@
 
 class Authorize {
 
-	signIn(auth, email, password) {
+	signIn(auth, userData) {
 		let signInStatus = new Promise((resolve, reject) => {
-			auth.signInWithEmailAndPassword(email, password).then((response) => { 
-				console.log('passed >> true', response);
-				resolve('sign in >>> passed', response);
+			auth.signInWithEmailAndPassword(userData.email, userData.password).then((response) => { 
+				resolve(response);
 
 			}, (error) => {
-				console.log('failed >>', error);
 				let errorCode = error.code;
 				let errorMessage = error.message;
-				reject('sign in >>> failed', errorCode, errorMessage)
+				reject(errorCode + ' : ' + errorMessage)
 			});
 		});
 
 		return signInStatus;
 	}
-	//passed > checkAuthState();
 
 	signOut(auth) { 
 		let signOutStatus = new Promise((resolve, reject) => {
@@ -36,7 +33,7 @@ class Authorize {
 		let authState = new Promise((resolve, reject) => {
 			auth.onAuthStateChanged(function(user) {
 				if (user) {
-					resolve('auth state >>> signed in', user);
+					resolve(user);
 					
 				} else {
 					reject('auth state >>> signed out', user);
