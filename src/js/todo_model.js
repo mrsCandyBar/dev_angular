@@ -9,6 +9,7 @@ class TodoModel extends ModelProto {
 		this.username = '';
 		this.title = '';
 		this.description = '';
+		this.organisation = '';
 		this.status = '';
 		this.comments = '';
 		this.urgency = '';

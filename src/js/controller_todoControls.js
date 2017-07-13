@@ -15,30 +15,9 @@ class TodoControls {
 	    return todoList;
 	}
 
-    retrieveSingleTodo($scope) {
-    	// get data from DB
-	    $scope.todo = TodoService.retrieveSingleTodo(Data.example[0]);
-	    $scope.editable = false;
-
-	    $scope.update = function() {
-		    if ($scope.editable) {  
-		        let compareObj = JSON.stringify($scope.todo); 
-		        if ($scope.backup != compareObj) {
-		          $scope.backup = JSON.stringify($scope.todo);
-		          // add command to update data to DB;
-		        }
-
-		    } else {
-		        $scope.backup = JSON.stringify($scope.todo);
-		    }
-
-		    $scope.editable = !$scope.editable;
-		}
-
-	    $scope.cancel = function() {
-		    $scope.editable = !$scope.editable;
-		    $scope.todo = JSON.parse($scope.backup);
-		}
+    retrieveSingleTodo($scope, $route, store) {
+    	$scope.todo = store.tasks[$route.current.params.id];
+	    $scope.todo = TodoService.retrieveSingleTodo($scope.todo);
     }
 
     createTodo($scope) {

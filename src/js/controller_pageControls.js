@@ -1,7 +1,7 @@
 import Firebase from './firebase.js';
 import TodoControls from './controller_todoControls.js';
 
-class StaticPage {
+class Pages {
 
 	constructor() {
 		this.user;
@@ -73,6 +73,32 @@ class StaticPage {
 			}
 		}
 	};
+
+	todo($scope, $route) {
+		$scope.taskList = TodoControls.retrieveSingleTodo($scope, $route, Firebase);
+		$scope.editable = false;
+
+	    $scope.update = function() {
+		    if ($scope.editable) {  
+		        let compareObj = JSON.stringify($scope.todo); 
+		        if ($scope.backup != compareObj) {
+		          $scope.backup = JSON.stringify($scope.todo);
+		          console.log('new todo >>', $scope.todo);
+		          Firebase.updateTask(JSON.parse(compareObj));
+		        }
+
+		    } else {
+		        $scope.backup = JSON.stringify($scope.todo);
+		    }
+
+		    $scope.editable = !$scope.editable;
+		}
+
+	    $scope.cancel = function() {
+		    $scope.editable = !$scope.editable;
+		    $scope.todo = JSON.parse($scope.backup);
+		}
+	};
 }
 
-module.exports = new StaticPage();
+module.exports = new Pages();

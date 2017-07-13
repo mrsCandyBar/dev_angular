@@ -1,6 +1,6 @@
 import Firebase from './firebase.js';
 import Menu from './controller_menuControls.js';
-import StaticPage from './controller_staticControls.js';
+import Pages from './controller_pageControls.js';
 import Beer from './controller_beerControls.js';
 
 
@@ -19,7 +19,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
         controller: 'overviewControls',
         templateUrl: 'template/overview.html'
       })
-      .when('/todo/:name', {
+      .when('/todo/:id', {
         controller: 'todoControls',
         templateUrl: 'template/todo.html'
       })
@@ -37,10 +37,11 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
 
   // MENU
   .controller('menuControls',     function($rootScope)                      { Menu.initMenu(this, $rootScope, menuItems) })
-  .controller('homeControls',     function($scope, $location, $route)       { StaticPage.home($scope, $location, $route) })
-  .controller('aboutControls',    function($scope)                          { StaticPage.about($scope) })
-  .controller('overviewControls', function($scope, $route)                  { StaticPage.overview($scope, $route) })
-  .controller('archiveControls',  function($scope)                          { StaticPage.overview($scope) })
+  .controller('homeControls',     function($scope, $location, $route)       { Pages.home($scope, $location, $route) })
+  .controller('aboutControls',    function($scope)                          { Pages.about($scope) })
+  .controller('overviewControls', function($scope, $route)                  { Pages.overview($scope, $route) })
+  .controller('archiveControls',  function($scope)                          { Pages.overview($scope) })
+  .controller('todoControls',     function($scope, $route)                  { Pages.todo($scope, $route) })
 
   /*.controller('todoListControls', function($route)                          { TodoControls.retrieveTodos(this, $route) })
   .controller('todoControls',     function($scope)                          { TodoControls.retrieveSingleTodo($scope) })

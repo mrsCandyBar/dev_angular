@@ -10,7 +10,6 @@ class Command {
 			admin: userData.admin,
 			password: userData.password
 		});
-		console.log('user created');
 	}
 
 	updateUser(database, userId, userData) {
@@ -22,12 +21,25 @@ class Command {
 			admin: userData.admin
 		});
 	}
-	// updateUser('ABC123','candy','candy@gmail.com');
 
 	removeUser(database, userId) {
 		database.ref('users/' + userId).remove();
 	}
-	// removeUser("ABC123")
+
+	updateTask(database, taskId, taskData) {
+		console.log('updated >>>', database, taskId, taskData);
+		database.ref('tasks/' + taskId).update({
+			id: taskData.id,
+			user: taskData.user,
+			username: taskData.username,
+			title: taskData.title,
+			description: taskData.description,
+			organisation: taskData.organisation,
+			status: taskData.status,
+			comments: taskData.comments,
+			urgency: taskData.urgency
+		});
+	}
 }
 
 module.exports = new Command();

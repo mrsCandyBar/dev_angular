@@ -89,33 +89,38 @@ class Firebase {
     return setupStatus;
   }
 
-  _retrieveUserInfo() {
-    let dataRetrieved = new Promise((resolve, reject) => {
+      _retrieveUserInfo() {
+        let dataRetrieved = new Promise((resolve, reject) => {
 
-      Query.data(this.database, 'users/' + this.userID).then((userData) =>{
-        this.user = userData;
-        resolve(userData);
+          Query.data(this.database, 'users/' + this.userID).then((userData) =>{
+            this.user = userData;
+            resolve(userData);
 
-      }, (error) => {
-        reject('problem fetching user data', error)
-      });
-    });
+          }, (error) => {
+            reject('problem fetching user data', error)
+          });
+        });
 
-    return dataRetrieved
-  }
+        return dataRetrieved
+      }
 
-  _retrieveTasks(property, value) {
-    let dataRetrieved = new Promise((resolve, reject) => {
+      _retrieveTasks(property, value) {
+        let dataRetrieved = new Promise((resolve, reject) => {
 
-      Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/tasks', property, value).then((data) =>{
-        resolve(data);
+          Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/tasks', property, value).then((data) =>{
+            resolve(data);
 
-      }, (error) => {
-        reject(error);
-      });
-    });
+          }, (error) => {
+            reject(error);
+          });
+        });
 
-    return dataRetrieved
+        return dataRetrieved
+      }
+
+  updateTask(taskData) {
+    Command.updateTask(this.database, taskData.id, taskData);
+    this.tasks[taskData.id] = taskData;
   }
 
 		/*_isUserLoggedIn(user, credential) {
