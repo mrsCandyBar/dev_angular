@@ -28,7 +28,7 @@
       </section>
 
       <nav class="header__menu toggle--closed">
-        <ul class="nav nav-pills" ng-controller="MenuControls as menu">
+        <ul class="nav nav-pills" ng-controller="menuControls as menu">
           
           <li class="{{ item.isActive ? 'active' : '' }}" ng-repeat="item in menu.items">
             <a href="{{ item.url }}" ng-click="menu.select(item)">{{ item.page }}</a>

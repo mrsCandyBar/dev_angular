@@ -15,21 +15,6 @@
 	
 		<br><br>
 
-	<!-- <section ng-controller="todoListControls as todoList">
-		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} users</span>
-		<ul class="unstyled">
-			<li ng-repeat="todo in todoList.todos">
-				by {{ todo.user }}<br>
-				<div class="todo">
-					<a 	class="{{ todo.status === 'done' ? 'done-true' : '' }}" 
-						href="index.html#!/todo/{{ todo.id }}">
-						{{ todo.title }}
-					</a>
-				</div>
-			</li>
-		</ul>
-	</section> -->
-
 
 		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} todos</span>
 		<ul class="unstyled">
@@ -41,5 +26,8 @@
 				<small><i> &nbsp;&nbsp;( by <a href="#">{{ todo.user }}</a>)</i></small>
 			</li>
 		</ul>
+
+		<br>
+		<a href="index.html#!/create" class="btn btn-primary">new todo</a>
 	</section>
 </article>

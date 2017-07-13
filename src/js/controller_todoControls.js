@@ -16,11 +16,6 @@ class TodoControls {
 	    return todoList;
 	}
 
-	addTodo() {
-      	todoList.todos.push({text:todoList.todoText, done:false});
-      	todoList.todoText = '';
-    };
-
     retrieveSingleTodo($scope) {
     	// get data from DB
 	    $scope.todo = TodoService.retrieveSingleTodo(Data.example[0]);
