@@ -9,6 +9,7 @@ class Firebase {
 	constructor() {
     this.userID;
 		this.user;
+    this.tasks;
     this.firebase = initDB();
 		this.database = this.firebase.database();
 		this.credential;
@@ -38,12 +39,11 @@ class Firebase {
 
 	logUserIn(userData) {
     let loginUser = new Promise((resolve, reject) => {
+
       Authorize.signIn(this.auth, userData).then((data) => {
         this.userID = firebase.auth().currentUser.uid;
-        this.user = this._returnData('users/' + this.userId);
         this.credential = data;
-        
-        resolve(this.user);
+        resolve('User logged in successfully');
 
       }, (error) => {
         reject('Sign in attempt failed >>', error);
@@ -53,6 +53,71 @@ class Firebase {
     return loginUser;
 	}
 
+  setupOverviewPage() {
+    let setupStatus = new Promise((resolve, reject) => {
+
+      this._retrieveUserInfo().then((userData) => {
+        this.user = userData;
+
+        let task = {
+            filter: 'user', 
+            value: this.userID
+          }
+
+        if (!userData.admin) {
+          task = {
+            filter: 'organisation', 
+            value: this.user.organisation
+          }
+        }
+
+        this._retrieveTasks(task.filter, task.value).then((tasks) => {
+          this.tasks = tasks;
+          resolve('Page setup complete');
+          
+        }, (error) => {
+          reject('User data found but no tasks');
+
+        });
+
+      }, (error) => {
+        reject('User not found');
+      });
+
+    });
+
+    return setupStatus;
+  }
+
+  _retrieveUserInfo() {
+    let dataRetrieved = new Promise((resolve, reject) => {
+
+      Query.data(this.database, 'users/' + this.userID).then((userData) =>{
+        this.user = userData;
+        resolve(userData);
+
+      }, (error) => {
+        reject('problem fetching user data', error)
+      });
+    });
+
+    return dataRetrieved
+  }
+
+  _retrieveTasks(property, value) {
+    let dataRetrieved = new Promise((resolve, reject) => {
+
+      Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/tasks', property, value).then((data) =>{
+        resolve(data);
+
+      }, (error) => {
+        reject(error);
+      });
+    });
+
+    return dataRetrieved
+  }
+
 		/*_isUserLoggedIn(user, credential) {
 			Authorize.reAuthenticate(user, credential).then((resolve) => {
 				this.user = firebase.auth().currentUser;
@@ -61,33 +126,6 @@ class Firebase {
 			}, (error) => { 
         console.log('user is not logged in', error)});
 		}*/
-
-		_returnData(url) {
-			Query.data(this.database, url).then((dataRetrieved) =>{
-				return dataRetrieved;
-			});
-
-			/*Query.dataAndsubscribeToUpdates(this.database, '/users').then((data) =>{
-				// Do something with data and subscribe to data updates;
-			}, (error) => {
-				alert('Error returning user data >>', error)
-			});*/
-		}
-
-
-	/*bindUIEvents() {
-		let className = _getButtonClasses();
-
-		if (className.contains("addUser")) {
-		  	Command.addUser(this.database, userId, username, email);
-		}
-		else if (className.contains("updateUser")) {
-			Command.addUser(this.database, userId, username, email);
-		}
-		else if (className.contains("removeUser")) {
-			Command.removeUser(this.database, userId);
-		}
-	}*/
 }
 
 function initDB() {

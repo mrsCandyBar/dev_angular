@@ -1,7 +1,6 @@
 import Firebase from './firebase.js';
 import Menu from './controller_menuControls.js';
 import StaticPage from './controller_staticControls.js';
-import TodoControls from './controller_todoControls.js';
 import Beer from './controller_beerControls.js';
 
 
@@ -37,15 +36,15 @@ angular.module('myApp', ['ngRoute', 'tabsComponent'])
   })
 
   // MENU
-  .controller('menuControls',     function($rootScope)  { Menu.initMenu(this, $rootScope, menuItems) })
-  .controller('homeControls',     function($scope, $location, $route)      { StaticPage.home($scope, $location, $route) })
-  .controller('aboutControls',    function($scope)      { StaticPage.about($scope) })
-  .controller('overviewControls', function($scope)      { StaticPage.overview($scope) })
-  .controller('archiveControls',  function($scope)      { StaticPage.overview($scope) })
+  .controller('menuControls',     function($rootScope)                      { Menu.initMenu(this, $rootScope, menuItems) })
+  .controller('homeControls',     function($scope, $location, $route)       { StaticPage.home($scope, $location, $route) })
+  .controller('aboutControls',    function($scope)                          { StaticPage.about($scope) })
+  .controller('overviewControls', function($scope, $route)                  { StaticPage.overview($scope, $route) })
+  .controller('archiveControls',  function($scope)                          { StaticPage.overview($scope) })
 
-  .controller('todoListControls', function($route)      { TodoControls.retrieveTodos(this, $route) })
-  .controller('todoControls',     function($scope)      { TodoControls.retrieveSingleTodo($scope) })
-  .controller('createControls',   function($scope)      { TodoControls.createTodo($scope) });
+  /*.controller('todoListControls', function($route)                          { TodoControls.retrieveTodos(this, $route) })
+  .controller('todoControls',     function($scope)                          { TodoControls.retrieveSingleTodo($scope) })
+  .controller('createControls',   function($scope)                          { TodoControls.createTodo($scope) });*/
 
 /*
   // replace this with some fun stats based on user data returned

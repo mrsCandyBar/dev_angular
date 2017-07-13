@@ -1,32 +1,38 @@
 <article class="contentHolder">
 
-	<h2>{{ heading }}</h2>
+	<h2 ng-show="user.name">
+		{{ user.name }}<br> 
+		<small>{{ user.email }}</small><br>
+		<small>organisation : {{ user.organisation }}</small>
+		<i ng-show="user.admin"><small><small>is admin</small></small></i>
+	</h2>
 
 	<h3><br>Todos</h3>
 
-	<section class="contentHolder__btn-holder" ng-controller="todoListControls as todoList">
-		Filter by : 
+	<section class="contentHolder__btn-holder">
 
-		<a 	ng-repeat="filter in todoList.filters"
+		Filter by : 
+		<a 	ng-repeat="filter in taskList.filters"
 			class="btn btn-sm btn-default {{ current.params.filter === filter ? 'active' : ''}}" 
 			href="index.html#!/overview/{{ filter }}">
 			{{ filter }}
 		</a>
 	
 		<br><br>
-
-
-		<span><br>{{todoList.remaining()}} of {{todoList.todos.length}} todos</span>
+	
+	
+		<span><br>{{taskList.todos.length}} todos</span>
 		<ul class="unstyled">
-			<li ng-repeat="todo in todoList.todos">
+			<li ng-repeat="todo in taskList.todos">
 				<a 	class="{{ todo.status === 'done' ? 'done-true' : '' }}" 
 					href="index.html#!/todo/{{ todo.id }}">
 					{{ todo.title }}
 				</a>
-				<small><i> &nbsp;&nbsp;( by <a href="#">{{ todo.user }}</a>)</i></small>
+
+				<small ng-show="user.admin"><i> &nbsp;&nbsp;( by <a href="#">{{ todo.username }}</a>)</i></small>
 			</li>
 		</ul>
-
+	
 		<br>
 		<a href="index.html#!/create" class="btn btn-primary">new todo</a>
 	</section>

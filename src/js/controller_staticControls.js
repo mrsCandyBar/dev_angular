@@ -1,4 +1,5 @@
 import Firebase from './firebase.js';
+import TodoControls from './controller_todoControls.js';
 
 class StaticPage {
 
@@ -55,9 +56,22 @@ class StaticPage {
 		$scope.quote = 'In object-oriented programming, the use of interfaces as an architectural pattern to construct modules is known as interface-based programming - Modular Programming found on Wikipedia';
 	};
 
-	overview($scope) {
-		console.log('user >>', Firebase.user)
-		$scope.heading = 'Welcome ' + 'User';
+	overview($scope, $route) {
+		if (Firebase.userID) {
+			if (!Firebase.user) {
+				Firebase.setupOverviewPage().then((resolve) => {
+					console.log('restarting ...');
+					$route.reload();
+
+				}, (error) => {
+					alert('Oops something went wrong... this is awkward', error);
+				});
+
+			} else {
+				$scope.user = Firebase.user;
+				$scope.taskList = TodoControls.retrieveTodos($scope, $route, Firebase);
+			}
+		}
 	};
 }
 

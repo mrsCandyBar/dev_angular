@@ -4,7 +4,7 @@ class Query {
 	data(database, url) {
 		let retrievedData = new Promise((resolve) => {
 			database.ref(url).once('value').then(function(snapshot) {
-				resolve('data >>> retrieved', snapshot.val());
+				resolve(snapshot.val());
 			});
 		});
 
@@ -15,6 +15,23 @@ class Query {
 		let data = new Promise((resolve, reject) => {
 			database.ref(url).on('value', function(snapshot) {
 				resolve('data >>> retrieved and subscribed', snapshot.val());
+
+			}, function(err) {
+				reject('data >>> denied retrieval and subscription', err);
+			});
+		});
+
+		return data;
+	}
+
+	dataAndsubscribeToUpdatesForSpecificResults(database, url, property, value) {
+		let data = new Promise((resolve, reject) => {
+			database
+				.ref(url)
+				.orderByChild(property)
+				.equalTo(value)
+				.on('value', function(snapshot) {
+					resolve(snapshot.val()); //see .indexOn to add to rules for large DB queries
 
 			}, function(err) {
 				reject('data >>> denied retrieval and subscription', err);

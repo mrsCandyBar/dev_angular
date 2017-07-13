@@ -3,12 +3,11 @@ import Data from './todo_data.js';
 
 class TodoControls {
 
-	retrieveTodos($scope, $route) {
+	retrieveTodos($scope, $route, store) {
 		let todoList = $scope;
-	    todoList.filters = TodoService.retrieveSearchFilters();
-	    todoList.todos = TodoService.retrieveTodos(Data.example);
+		todoList.filters = TodoService.retrieveSearchFilters(store.tasks[0]);
+	    todoList.todos = TodoService.retrieveTodos(store.tasks);
 
-	    // filter data
 	    if ($route.current.params) {
 	      todoList.todos = TodoService.filterResults($route.current.params['filter'], todoList.todos);
 	    }

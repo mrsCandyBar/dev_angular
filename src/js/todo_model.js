@@ -6,6 +6,7 @@ class TodoModel extends ModelProto {
 		super();
 		this.id = '';
 		this.user = '';
+		this.username = '';
 		this.title = '';
 		this.description = '';
 		this.status = '';

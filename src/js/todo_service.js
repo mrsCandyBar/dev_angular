@@ -5,9 +5,16 @@ class TodoService {
 	retrieveTodos(rawObj) {
 	  if (rawObj && rawObj !== null && typeof rawObj === 'object') {
 	    let buildMap = [];
-	    rawObj.forEach((todoObj) => {
+
+	    /*rawObj.forEach((todoObj) => {
 	      buildMap[buildMap.length] = new TodoModel(todoObj);
-	    })
+	    })*/
+
+      Object.keys(rawObj).forEach((todoObj) => {
+        let currentTodo = rawObj[todoObj];
+        currentTodo.id = todoObj; 
+        buildMap[buildMap.length] = new TodoModel(currentTodo);
+      })
 	    
 	    return buildMap;
 	  } 
