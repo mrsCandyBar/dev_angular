@@ -93,8 +93,14 @@ class Pages {
 
 	todo($scope, $route) {
 		$scope.taskList = TodoControls.retrieveSingleTodo($scope, $route, Firebase);
+		$scope.todoStates = TodoControls.retrieveTodoStates();
 		$scope.editable = false;
 		$scope.isAdmin = Firebase.user.admin;
+		$scope.taskDates = {
+			start : moment($scope.todo.dateStart).format('YYYY-MM-DD'),
+			end : moment($scope.todo.dateEnd).format('YYYY-MM-DD'),
+			total : moment($scope.todo.dateEnd).fromNow()
+		}
 
 	    $scope.update = function() {
 		    if ($scope.editable) {  

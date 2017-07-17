@@ -5,6 +5,15 @@
     <span ng-show="!editable">{{ todo.title }}</span>
     <input ng-show="editable" ng-model="todo.title" /><br>
 
+    <div>
+      <span>Task Duration :</span>
+      <span ng-show="!editable">{{ taskDates.start }} - {{ taskDates.end }} ({{ taskDates.total }})</span>
+      <div ng-show="editable" class="form-group col">
+        From <input type="date" ng-model="todo.dateStart" class="date date_start" value="{{ taskDates.start }}"><br>
+        To <input type="date" ng-model="todo.dateEnd" class="date date_end" value="{{ taskDates.end }}">
+      </div>
+    </div>
+
     <a 
       ng-show="!editable && isAdmin"
       ng-click="todo.isActive === true ? archiveTodo() : reactivateTodo()"
@@ -18,18 +27,20 @@
     <small>
       <span ng-show="!editable">{{ todo.status }}</span>
       <div ng-show="editable" class="form-group col">
-        <input type="radio" name="status" value="waiting" checked> Waiting<br>
-        <input type="radio" name="status" value="busy"> Busy<br>
-        <input type="radio" name="status" value="done"> Done
+        <span ng-repeat="state in todoStates.status">
+          <input type="radio" name="Status" value="{{ state }}" 
+            ng-model="todo.status"> {{ state }}<br>
+        </span>
       </div>
     </small>
 
     <small>
       <span ng-show="!editable">( <i>{{ todo.urgency }}</i> )</span>
       <div ng-show="editable" class="form-group col">
-        <input type="radio" name="urgency" value="waiting" checked> Waiting<br>
-        <input type="radio" name="urgency" value="busy"> Urgent<br>
-        <input type="radio" name="urgency" value="done"> Done
+        <span ng-repeat="state in todoStates.urgency">
+          <input type="radio" name="Urgency" value="{{ state }}" 
+            ng-model="todo.urgency"> {{ state }}<br>
+        </span>
       </div>
     </small> 
   </h3>

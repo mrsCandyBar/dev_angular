@@ -38,7 +38,9 @@ class Command {
 			status: taskData.status,
 			comments: taskData.comments,
 			isActive: taskData.isActive,
-			urgency: taskData.urgency
+			urgency: taskData.urgency,
+			dateStart: taskData.dateStart,
+			dateEnd: taskData.dateEnd
 		});
 	}
 
