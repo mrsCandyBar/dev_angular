@@ -9,6 +9,7 @@ class Firebase {
 	constructor() {
     this.userID;
 		this.user;
+    this.allUsers;
     this.tasks;
     this.firebase = initDB();
 		this.database = this.firebase.database();
@@ -89,6 +90,39 @@ class Firebase {
     return setupStatus;
   }
 
+  taskUpdate() {
+    let taskData = new Promise((resolve, reject) => {
+      let task = {
+        filter: 'user', 
+        value: this.userID
+      }
+
+      if (!this.user.admin) {
+        task = {
+          filter: 'organisation', 
+          value: this.user.organisation
+        }
+      }
+
+      this._retrieveTasks(task.filter, task.value).then((tasks) => {
+        
+        let tasksListed = angular.toJson(this.tasks);
+        let newTasksListed = JSON.stringify(tasks);
+
+        if (tasksListed !== newTasksListed) {
+          this.tasks = tasks;
+          resolve('Tasks Updated');
+        } else {
+          reject('No changes to task data');
+        }
+      }, (error) => {
+        reject('User data found but no tasks');
+      });
+    })
+
+    return taskData;
+  }
+
       _retrieveUserInfo() {
         let dataRetrieved = new Promise((resolve, reject) => {
 
@@ -118,9 +152,47 @@ class Firebase {
         return dataRetrieved
       }
 
+  retrieveUsers() {
+    let dataRetrieved = new Promise((resolve, reject) => {
+      Query.data(this.database, 'users/').then((users) => {
+
+        let userArray = [];
+        if (users && users !== null && typeof users === 'object') {
+          Object.keys(users).forEach((user) => {
+            userArray[userArray.length] = users[user];
+          });
+        }
+
+        let usersListed = angular.toJson(this.allUsers);
+        let newUsersListed = JSON.stringify(userArray);
+        
+        if (usersListed !== newUsersListed) {
+          this.allUsers = userArray;
+          resolve(this.allUsers);
+        } else {
+          reject(this.allUsers);
+        }
+
+      }, (error) => {
+        reject(error);
+      });
+    });
+
+    return dataRetrieved;
+  }
+
   updateTask(taskData) {
     Command.updateTask(this.database, taskData.id, taskData);
     this.tasks[taskData.id] = taskData;
+  }
+
+  moveTaskToArchive(taskData) {
+    console.log('move this task to archive >>>', taskData);
+    //Command.moveTask(this.database, taskData.id, taskData, 'archive');
+  }
+
+  deleteTask(taskId) {
+    Command.deleteTask(this.database, taskId, 'tasks');
   }
 
 		/*_isUserLoggedIn(user, credential) {

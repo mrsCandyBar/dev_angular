@@ -70,6 +70,13 @@ class Pages {
 			} else {
 				$scope.user = Firebase.user;
 				$scope.taskList = TodoControls.retrieveTodos($scope, $route, Firebase);
+				console.log('task list loaded');
+
+				Firebase.taskUpdate().then((response) => {
+					console.log('restarting ...');
+					$route.reload();
+
+				}, (reject) => { console.log('No updates to Task Data recieved'); })
 			}
 		}
 	};
@@ -77,13 +84,13 @@ class Pages {
 	todo($scope, $route) {
 		$scope.taskList = TodoControls.retrieveSingleTodo($scope, $route, Firebase);
 		$scope.editable = false;
+		$scope.isAdmin = Firebase.user.admin;
 
 	    $scope.update = function() {
 		    if ($scope.editable) {  
 		        let compareObj = JSON.stringify($scope.todo); 
 		        if ($scope.backup != compareObj) {
 		          $scope.backup = JSON.stringify($scope.todo);
-		          console.log('new todo >>', $scope.todo);
 		          Firebase.updateTask(JSON.parse(compareObj));
 		        }
 
@@ -97,6 +104,46 @@ class Pages {
 	    $scope.cancel = function() {
 		    $scope.editable = !$scope.editable;
 		    $scope.todo = JSON.parse($scope.backup);
+		}
+
+		$scope.archiveTodo = function() {
+			let compareObj = JSON.stringify($scope.todo); 
+			console.log('todo >>>', compareObj);
+			Firebase.moveTaskToArchive(JSON.parse(compareObj));
+		}
+
+		$scope.deleteTodo = function() {
+			Firebase.deleteTask($scope.todo.id);
+			history.back();
+		}
+	};
+
+	create($scope, $route, uuid) {
+		$scope.todo = TodoControls.createTodo($route, uuid, Firebase.user);
+		$scope.todoStates = TodoControls.retrieveTodoStates();
+		$scope.allUsers = Firebase.allUsers;
+
+			// update user list if user list is outdated;
+			Firebase.retrieveUsers().then((response) => {
+				$route.reload();
+
+			}, (reject) => {
+				console.log('user data not changed', reject);
+			});
+		
+		
+		$scope.submit = function() {
+			if ($scope.todo.user) {
+				let user = JSON.parse($scope.todo.user);
+				$scope.todo.username = user['name'];
+				$scope.todo.user = user['id'];
+			    Firebase.updateTask($scope.todo);
+			    alert('Todo Created');
+
+			    history.back();
+			} else {
+				alert('Please select a user');
+			}
 		}
 	};
 }

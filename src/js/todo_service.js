@@ -6,10 +6,6 @@ class TodoService {
 	  if (rawObj && rawObj !== null && typeof rawObj === 'object') {
 	    let buildMap = [];
 
-	    /*rawObj.forEach((todoObj) => {
-	      buildMap[buildMap.length] = new TodoModel(todoObj);
-	    })*/
-
       Object.keys(rawObj).forEach((todoObj) => {
         let currentTodo = rawObj[todoObj];
         currentTodo.id = todoObj; 
@@ -17,12 +13,18 @@ class TodoService {
       })
 	    
 	    return buildMap;
-	  } 
+	  } else {
+      return [];
+    }
 	}
 
 	retrieveSearchFilters() {
 		return new TodoModel([]).getModelFilters();
 	}
+
+  retrieveState(property) {
+    return new TodoModel([]).getStates(property);
+  }
 
 	filterResults(params, store) {
     if (params != 'title') {

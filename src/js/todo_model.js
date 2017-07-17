@@ -10,10 +10,18 @@ class TodoModel extends ModelProto {
 		this.title = '';
 		this.description = '';
 		this.organisation = '';
-		this.status = '';
-		this.comments = '';
-		this.urgency = '';
+		this.status = 'Waiting';
+		this.urgency = 'Waiting';
+		this.comments = 0;
 		this.createModel(rawObj);
+	}
+
+	getStates(property) {
+		let states = {
+			status: 	['Waiting', 'Busy', 'Done', 'Hold'], 
+			urgency: 	['Waiting', 'Important', 'Urgent', 'Done', 'Hold']
+		}
+		return states;
 	}
 }
 

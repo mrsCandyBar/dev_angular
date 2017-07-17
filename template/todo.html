@@ -5,6 +5,16 @@
     <span ng-show="!editable">{{ todo.title }}</span>
     <input ng-show="editable" ng-model="todo.title" /><br>
 
+    <a 
+      ng-show="!editable && isAdmin"
+      ng-click="archiveTodo()"
+      class="btn btn-primary">Archive</a>
+
+    <a 
+      ng-show="!editable && isAdmin"
+      ng-click="deleteTodo()"
+      class="btn btn-primary">Delete</a>
+
     <small>
       <span ng-show="!editable">{{ todo.status }}</span>
       <div ng-show="editable" class="form-group col">

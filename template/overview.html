@@ -7,20 +7,21 @@
 		<i ng-show="user.admin"><small><small>is admin</small></small></i>
 	</h2>
 
-	<h3><br>Todos</h3>
+	<h3 ng-show="taskList.todos && taskList.todos.length > 0"><br>Todos</h3>
 
-	<section class="contentHolder__btn-holder">
+	<section class="contentHolder__btn-holder" ng-show="taskList.todos && taskList.todos.length > 0">
 
-		Filter by : 
-		<a 	ng-repeat="filter in taskList.filters"
-			class="btn btn-sm btn-default {{ current.params.filter === filter ? 'active' : ''}}" 
-			href="index.html#!/overview/{{ filter }}">
-			{{ filter }}
-		</a>
-	
-		<br><br>
-	
-	
+		<span ng-show="taskList.todos.length > 5">
+			Filter by : 
+			<a 	ng-repeat="filter in taskList.filters"
+				class="btn btn-sm btn-default {{ current.params.filter === filter ? 'active' : ''}}" 
+				href="index.html#!/overview/{{ filter }}">
+				{{ filter }}
+			</a>
+		
+			<br><br>
+		</span>
+
 		<span><br>{{taskList.todos.length}} todos</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in taskList.todos">
@@ -32,8 +33,11 @@
 				<small ng-show="user.admin"><i> &nbsp;&nbsp;( by <a href="#">{{ todo.username }}</a>)</i></small>
 			</li>
 		</ul>
-	
-		<br>
-		<a href="index.html#!/create" class="btn btn-primary">new todo</a>
 	</section>
+
+	<h3 ng-show="taskList.todos.length === 0"><br>No Todos</h3>
+	<h3 ng-show="!taskList.todos"><br>Loading</h3>
+
+	<br>
+	<a  ng-show="taskList.todos" href="index.html#!/create" class="btn btn-primary">new todo</a>
 </article>

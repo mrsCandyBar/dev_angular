@@ -26,9 +26,9 @@ class Command {
 		database.ref('users/' + userId).remove();
 	}
 
-	updateTask(database, taskId, taskData) {
-		console.log('updated >>>', database, taskId, taskData);
-		database.ref('tasks/' + taskId).update({
+	updateTask(database, taskId, taskData, newLocation) {
+		let location = newLocation ? newLocation : 'tasks';
+		database.ref(location + '/' + taskId).update({
 			id: taskData.id,
 			user: taskData.user,
 			username: taskData.username,
@@ -39,6 +39,18 @@ class Command {
 			comments: taskData.comments,
 			urgency: taskData.urgency
 		});
+	}
+
+	deleteTask(database, taskId, newLocation) {
+		let location = newLocation ? newLocation : 'tasks';
+		console.log('delete task >>>', taskId, location);
+		database.ref(location + '/' + taskId).remove();
+	}
+
+	moveTask(database, taskId, taskData, newLocation) {
+		let removeLocation = newLocation === 'archive' ? 'tasks' : 'archive';
+		this.updateTask(database, taskId, taskData, newLocation);
+		this.deleteTask(database, taskId, removeLocation);
 	}
 }
 
