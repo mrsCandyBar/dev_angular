@@ -15,6 +15,21 @@ class Firebase {
 		this.database = this.firebase.database();
 		this.credential;
     this.auth = this.firebase.auth();
+
+    console.log('session >>>', window.sessionStorage);
+    if (window.sessionStorage.length > 0) {
+
+      let userData = {
+        email : window.sessionStorage.email,
+        password : window.sessionStorage.password
+      }
+
+      this.logUserIn(userData).then((response) => {
+        console.log('auto login passed');
+      }, (error) => {
+        console.log('auto login failed >>>', error);
+      });
+    }
 	}
 
   createUser(userData) {
@@ -39,6 +54,9 @@ class Firebase {
   }
 
 	logUserIn(userData) {
+    window.sessionStorage.email = userData.email;
+    window.sessionStorage.password = userData.password;
+
     let loginUser = new Promise((resolve, reject) => {
 
       Authorize.signIn(this.auth, userData).then((data) => {
@@ -105,7 +123,7 @@ class Firebase {
       }
 
       this._retrieveTasks(task.filter, task.value).then((tasks) => {
-        
+
         let tasksListed = angular.toJson(this.tasks);
         let newTasksListed = JSON.stringify(tasks);
 
