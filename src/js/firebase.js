@@ -15,22 +15,24 @@ class Firebase {
 		this.database = this.firebase.database();
 		this.credential;
     this.auth = this.firebase.auth();
-
-    console.log('session >>>', window.sessionStorage);
+    
     if (window.sessionStorage.length > 0) {
-
-      let userData = {
-        email : window.sessionStorage.email,
-        password : window.sessionStorage.password
-      }
-
-      this.logUserIn(userData).then((response) => {
-        console.log('auto login passed');
-      }, (error) => {
-        console.log('auto login failed >>>', error);
-      });
+      this.autoLogin();
     }
 	}
+
+  autoLogin() {
+    let userData = {
+      email : window.sessionStorage.email,
+      password : window.sessionStorage.password
+    }
+
+    this.logUserIn(userData).then((response) => {
+      console.log('auto login passed');
+    }, (error) => {
+      console.log('auto login failed >>>', error);
+    });
+  }
 
   createUser(userData) {
     let createUser = new Promise((resolve, reject) => {
@@ -71,6 +73,24 @@ class Firebase {
 
     return loginUser;
 	}
+
+  logUserOut() {
+    window.sessionStorage.clear();
+
+    let logOutUser = new Promise((resolve, reject) => {
+
+      Authorize.signOut(this.auth).then((data) => {
+        this.userID = '';
+        this.credential = '';
+        resolve('User logged out successfully');
+
+      }, (error) => {
+        reject('Sign out attempt failed >>', error);
+      });
+    });
+
+    return logOutUser;
+  }
 
   setupOverviewPage() {
     let setupStatus = new Promise((resolve, reject) => {

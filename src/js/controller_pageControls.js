@@ -6,9 +6,13 @@ class Pages {
 	constructor() {
 		this.user;
 		this.isAdmin = false;
+		this.loggedIn = window.sessionStorage.password && window.sessionStorage.email ? true : false;
 	}
 
 	home($scope, $location, $route) {
+
+		$scope.loggedIn = this.loggedIn;
+
 		let main = $scope;
 		main.heading = 'Welcome Stranger!';
 		main.account = 'not-active';
@@ -25,6 +29,7 @@ class Pages {
 	  		main.account = status;
 	  		main.action = (status === 'active') ? 'login' : 'create my account';
 		}
+
 		main.submit = function() {
 			if (main.account === 'active') {
 				Firebase.logUserIn(main.login).then((response) => {
@@ -42,6 +47,11 @@ class Pages {
 					console.log('oh crap >>>', error);
 				})
 			}
+		}
+
+		main.logout = function() {
+			Firebase.logUserOut();
+			location.reload();
 		}
 
 		main.redirect = function() {
