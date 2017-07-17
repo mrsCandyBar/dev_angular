@@ -255,8 +255,11 @@ class Firebase {
   }
 
   moveTaskToArchive(taskData) {
-    console.log('move this task to archive >>>', taskData);
     Command.moveTask(this.database, taskData.id, taskData, 'archive');
+  }
+
+  reactivateTask(taskData) {
+    Command.moveTask(this.database, taskData.id, taskData, 'tasks');
   }
 
   deleteTask(taskId) {

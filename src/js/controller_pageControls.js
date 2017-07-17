@@ -118,8 +118,12 @@ class Pages {
 
 		$scope.archiveTodo = function() {
 			let compareObj = JSON.stringify($scope.todo); 
-			console.log('todo >>>', compareObj);
 			Firebase.moveTaskToArchive(JSON.parse(compareObj));
+		}
+
+		$scope.reactivateTodo = function() {
+			let compareObj = JSON.stringify($scope.todo); 
+			Firebase.reactivateTask(JSON.parse(compareObj));
 		}
 
 		$scope.deleteTodo = function() {
@@ -171,7 +175,7 @@ class Pages {
 			} else {
 				$scope.user = Firebase.user;
 				$scope.taskList = TodoControls.retrieveTodos($scope, $route, Firebase);
-				console.log('task list loaded');
+				console.log('task list loaded', $scope.taskList);
 
 				Firebase.taskUpdate('archive').then((response) => {
 					console.log('archive restarting ...');

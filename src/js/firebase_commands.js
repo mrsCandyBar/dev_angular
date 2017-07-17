@@ -37,18 +37,20 @@ class Command {
 			organisation: taskData.organisation,
 			status: taskData.status,
 			comments: taskData.comments,
+			isActive: taskData.isActive,
 			urgency: taskData.urgency
 		});
 	}
 
 	deleteTask(database, taskId, newLocation) {
 		let location = newLocation ? newLocation : 'tasks';
-		console.log('delete task >>>', taskId, location);
 		database.ref(location + '/' + taskId).remove();
 	}
 
 	moveTask(database, taskId, taskData, newLocation) {
 		let removeLocation = newLocation === 'archive' ? 'tasks' : 'archive';
+		taskData.isActive = (newLocation === 'archive') ? false : true;
+		console.log('task data >>>', taskData);
 		this.updateTask(database, taskId, taskData, newLocation);
 		this.deleteTask(database, taskId, removeLocation);
 	}

@@ -13,6 +13,7 @@ class TodoModel extends ModelProto {
 		this.status = 'Waiting';
 		this.urgency = 'Waiting';
 		this.comments = 0;
+		this.isActive = true;
 		this.createModel(rawObj);
 	}
 

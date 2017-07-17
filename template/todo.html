@@ -7,8 +7,8 @@
 
     <a 
       ng-show="!editable && isAdmin"
-      ng-click="archiveTodo()"
-      class="btn btn-primary">Archive</a>
+      ng-click="todo.isActive === true ? archiveTodo() : reactivateTodo()"
+      class="btn btn-primary">{{ todo.isActive === true ? 'Archive' : 'Activate' }}</a>
 
     <a 
       ng-show="!editable && isAdmin"
