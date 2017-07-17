@@ -1,15 +1,8 @@
 <article class="contentHolder">
 
 	<h2>Archives</h2>
-	<h3>Completed Todos</h3>
 
-	<section class="contentHolder__btn-holder">
-		Filter by : 
-		<button class="btn btn-sm btn-default">Name</button>
-		<button class="btn btn-sm btn-default">Date</button>
-	</section>
-
-	<section ng-controller="archiveControls as todoList">
+	<!-- <section ng-controller="archiveControls as todoList">
 		<span><br>{{todoList.todos.length}} items</span>
 		<ul class="unstyled">
 			<li ng-repeat="todo in todoList.todos">
@@ -19,5 +12,36 @@
 				
 			</li>
 		</ul>
+	</section> -->
+
+	<h3 ng-show="taskList.todos && taskList.todos.length > 0"><br>Archived Todos</h3>
+
+	<section class="contentHolder__btn-holder" ng-show="taskList.todos && taskList.todos.length > 0">
+
+		<span ng-show="taskList.todos.length > 5">
+			Filter by : 
+			<a 	ng-repeat="filter in taskList.filters"
+				class="btn btn-sm btn-default {{ current.params.filter === filter ? 'active' : ''}}" 
+				href="index.html#!/overview/{{ filter }}">
+				{{ filter }}
+			</a>
+		
+			<br><br>
+		</span>
+
+		<span><br>{{taskList.todos.length}} Archived Todos</span>
+		<ul class="unstyled">
+			<li ng-repeat="todo in taskList.todos">
+				<a 	class="{{ todo.status === 'done' ? 'done-true' : '' }}" 
+					href="index.html#!/todo/{{ todo.id }}">
+					{{ todo.title }}
+				</a>
+
+				<small ng-show="user.admin"><i> &nbsp;&nbsp;( by <a href="#">{{ todo.username }}</a>)</i></small>
+			</li>
+		</ul>
 	</section>
+
+	<h3 ng-show="taskList.todos.length === 0"><br>No Archived Todos</h3>
+	<h3 ng-show="!taskList.todos"><br>Loading</h3>
 </article>

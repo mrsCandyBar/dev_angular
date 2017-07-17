@@ -41,7 +41,7 @@ angular.module('myApp', ['ngRoute', 'tabsComponent', 'angular-uuid'])
   .controller('homeControls',     function($scope, $location, $route)       { Pages.home($scope, $location, $route) })
   .controller('aboutControls',    function($scope)                          { Pages.about($scope) })
   .controller('overviewControls', function($scope, $route)                  { Pages.overview($scope, $route) })
-  .controller('archiveControls',  function($scope, $route)                  { Pages.overview($scope, $route) })
+  .controller('archiveControls',  function($scope, $route)                  { Pages.archive($scope, $route) })
   .controller('todoControls',     function($scope, $route)                  { Pages.todo($scope, $route) })
   .controller('createControls',   function($scope, $route, uuid)     { 
     let getUUID = uuid.v4();

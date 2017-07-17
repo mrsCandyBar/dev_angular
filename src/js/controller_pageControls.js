@@ -156,6 +156,31 @@ class Pages {
 			}
 		}
 	};
+
+	archive($scope, $route) {
+		if (Firebase.userID) {
+			if (!Firebase.user) {
+				Firebase.setupArchivePage().then((resolve) => {
+					console.log('restarting ...');
+					$route.reload();
+
+				}, (error) => {
+					alert('Oops something went wrong... this is awkward', error);
+				});
+
+			} else {
+				$scope.user = Firebase.user;
+				$scope.taskList = TodoControls.retrieveTodos($scope, $route, Firebase);
+				console.log('task list loaded');
+
+				Firebase.taskUpdate('archive').then((response) => {
+					console.log('archive restarting ...');
+					$route.reload();
+
+				}, (reject) => { console.log('No updates to Task Data recieved'); })
+			}
+		}
+	};
 }
 
 module.exports = new Pages();

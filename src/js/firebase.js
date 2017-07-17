@@ -128,7 +128,35 @@ class Firebase {
     return setupStatus;
   }
 
-  taskUpdate() {
+  setupArchivePage() {
+    let setupStatus = new Promise((resolve, reject) => {
+
+      let task = {
+          filter: 'user', 
+          value: this.userID
+        }
+
+      if (!userData.admin) {
+        task = {
+          filter: 'organisation', 
+          value: this.user.organisation
+        }
+      }
+
+      this._retrieveTasks(task.filter, task.value, 'archive').then((tasks) => {
+        this.tasks = tasks;
+        resolve('Page setup complete');
+        
+      }, (error) => {
+        reject('User data found but no tasks');
+
+      });
+    });
+
+    return setupStatus;
+  }
+
+  taskUpdate(location) {
     let taskData = new Promise((resolve, reject) => {
       let task = {
         filter: 'user', 
@@ -142,7 +170,8 @@ class Firebase {
         }
       }
 
-      this._retrieveTasks(task.filter, task.value).then((tasks) => {
+      let newLocation = !location ? 'tasks' : location;
+      this._retrieveTasks(task.filter, task.value, newLocation).then((tasks) => {
 
         let tasksListed = angular.toJson(this.tasks);
         let newTasksListed = JSON.stringify(tasks);
@@ -176,10 +205,11 @@ class Firebase {
         return dataRetrieved
       }
 
-      _retrieveTasks(property, value) {
+      _retrieveTasks(property, value, location) {
+        let newLocation = !location ? 'tasks' : location;
         let dataRetrieved = new Promise((resolve, reject) => {
 
-          Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/tasks', property, value).then((data) =>{
+          Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/' + newLocation, property, value).then((data) =>{
             resolve(data);
 
           }, (error) => {
@@ -226,7 +256,7 @@ class Firebase {
 
   moveTaskToArchive(taskData) {
     console.log('move this task to archive >>>', taskData);
-    //Command.moveTask(this.database, taskData.id, taskData, 'archive');
+    Command.moveTask(this.database, taskData.id, taskData, 'archive');
   }
 
   deleteTask(taskId) {
