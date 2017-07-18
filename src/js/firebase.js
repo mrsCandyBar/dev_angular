@@ -1,8 +1,8 @@
 
-import Authorize from './firebase_authorization.js';
-import User from './firebase_user.js';
-import Query from './firebase_queries.js';
-import Command from './firebase_commands.js';
+import Authorize from './firebase/firebase_authorization.js';
+import User from './firebase/firebase_user.js';
+import Query from './firebase/firebase_queries.js';
+import Command from './firebase/firebase_commands.js';
 
 class Firebase {
 	
@@ -22,25 +22,25 @@ class Firebase {
 	}
 
   autoLogin() {
-    let userData = {
+    let user = {
       email : window.sessionStorage.email,
       password : window.sessionStorage.password
     }
 
-    this.logUserIn(userData).then((response) => {
+    this.logIn(user).then((response) => {
       console.log('auto login passed');
     }, (error) => {
       console.log('auto login failed >>>', error);
     });
   }
 
-  createUser(userData) {
+  createUser(user) {
     let createUser = new Promise((resolve, reject) => {
 
-      User.create(userData).then((data) => {
-        Command.addUser(this.database, data.uid, userData);
+      User.create(user).then((data) => {
+        Command.addUser(this.database, data.uid, user);
 
-        this.logUserIn(userData).then((response) => {
+        this.logIn(user).then((response) => {
           resolve(response);
         }, (error) => {
           reject('user created but signin failed >>', error);
@@ -93,58 +93,36 @@ class Firebase {
     return logOutUser;
   }
 
-  setupOverviewPage() {
-    let setupStatus = new Promise((resolve, reject) => {
+  
 
-      this._retrieveUserInfo().then((userData) => {
+
+  retrieveUserInfo() {
+    let dataRetrieved = new Promise((resolve, reject) => {
+      Query.data(this.database, 'users/' + this.userID).then((userData) =>{
         this.user = userData;
-
-        let task = {
-            filter: 'user', 
-            value: this.userID
-          }
-
-        if (!userData.admin) {
-          task = {
-            filter: 'organisation', 
-            value: this.user.organisation
-          }
-        }
-
-        this._retrieveTasks(task.filter, task.value).then((tasks) => {
-          this.tasks = tasks;
-          resolve('Page setup complete');
-          
-        }, (error) => {
-          reject('User data found but no tasks');
-
-        });
+        this.searchFilters = this._returnSearchFilters(userData.admin, userData.organisation, this.userID);
+        resolve(userData);
 
       }, (error) => {
-        reject('User not found');
+        reject('problem fetching user data', error)
       });
-
     });
 
-    return setupStatus;
+    return dataRetrieved
   }
 
-  setupArchivePage() {
-    let setupStatus = new Promise((resolve, reject) => {
-
-      let task = {
-          filter: 'user', 
-          value: this.userID
-        }
-
-      if (!userData.admin) {
-        task = {
-          filter: 'organisation', 
-          value: this.user.organisation
-        }
+  _returnSearchFilters(isAdmin, organisation, userId) {
+    let task = {
+        filter: !isAdmin ? 'organisation' : 'user', 
+        value : !isAdmin ? organisation : userId
       }
 
-      this._retrieveTasks(task.filter, task.value, 'archive').then((tasks) => {
+    return task;
+  }
+
+  retrieveTasks(activity) {
+    let setupTasks = new Promise((resolve, reject) => {
+      this._retrieveTasks(activity).then((tasks) => {
         this.tasks = tasks;
         resolve('Page setup complete');
         
@@ -154,25 +132,25 @@ class Firebase {
       });
     });
 
-    return setupStatus;
+    return setupTasks;
   }
+
+      _retrieveTasks(location) {
+        let dataRetrieved = new Promise((resolve, reject) => {
+          Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/' + location, this.searchFilters.filter, this.searchFilters.value).then((data) =>{
+            resolve(data);
+
+          }, (error) => {
+            reject(error);
+          });
+        });
+
+        return dataRetrieved
+      }
 
   taskUpdate(location) {
     let taskData = new Promise((resolve, reject) => {
-      let task = {
-        filter: 'user', 
-        value: this.userID
-      }
-
-      if (!this.user.admin) {
-        task = {
-          filter: 'organisation', 
-          value: this.user.organisation
-        }
-      }
-
-      let newLocation = !location ? 'tasks' : location;
-      this._retrieveTasks(task.filter, task.value, newLocation).then((tasks) => {
+      this._retrieveTasks(location).then((tasks) => {
 
         let tasksListed = angular.toJson(this.tasks);
         let newTasksListed = JSON.stringify(tasks);
@@ -191,36 +169,7 @@ class Firebase {
     return taskData;
   }
 
-      _retrieveUserInfo() {
-        let dataRetrieved = new Promise((resolve, reject) => {
-
-          Query.data(this.database, 'users/' + this.userID).then((userData) =>{
-            this.user = userData;
-            resolve(userData);
-
-          }, (error) => {
-            reject('problem fetching user data', error)
-          });
-        });
-
-        return dataRetrieved
-      }
-
-      _retrieveTasks(property, value, location) {
-        let newLocation = !location ? 'tasks' : location;
-        let dataRetrieved = new Promise((resolve, reject) => {
-
-          Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/' + newLocation, property, value).then((data) =>{
-            console.log('data updated!', data);
-            resolve(data);
-
-          }, (error) => {
-            reject(error);
-          });
-        });
-
-        return dataRetrieved
-      }
+      
 
   retrieveUsers() {
     let dataRetrieved = new Promise((resolve, reject) => {
@@ -267,15 +216,6 @@ class Firebase {
   deleteTask(taskId) {
     Command.deleteTask(this.database, taskId, 'tasks');
   }
-
-		/*_isUserLoggedIn(user, credential) {
-			Authorize.reAuthenticate(user, credential).then((resolve) => {
-				this.user = firebase.auth().currentUser;
-				this._returnUserData();
-
-			}, (error) => { 
-        console.log('user is not logged in', error)});
-		}*/
 }
 
 function initDB() {
