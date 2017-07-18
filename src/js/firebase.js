@@ -55,13 +55,14 @@ class Firebase {
     return createUser;
   }
 
-	logUserIn(userData) {
-    window.sessionStorage.email = userData.email;
-    window.sessionStorage.password = userData.password;
-
+	logIn(user) {
     let loginUser = new Promise((resolve, reject) => {
 
-      Authorize.signIn(this.auth, userData).then((data) => {
+      Authorize.signIn(this.auth, user).then((data) => {
+
+        window.sessionStorage.email = user.email;
+        window.sessionStorage.password = user.password;
+        
         this.userID = firebase.auth().currentUser.uid;
         this.credential = data;
         resolve('User logged in successfully');
@@ -210,6 +211,7 @@ class Firebase {
         let dataRetrieved = new Promise((resolve, reject) => {
 
           Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/' + newLocation, property, value).then((data) =>{
+            console.log('data updated!', data);
             resolve(data);
 
           }, (error) => {

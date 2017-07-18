@@ -1,54 +1,45 @@
 <article class="contentHolder">
 
-	<h3>{{ heading }}</h3>
+	<h3>Welcome</h3>
 
-	<section ng-show="!loggedIn">
-		<button 
-			class="btn btn-lg btn-primary {{ account === 'active' ? 'active' : '' }}"
-			ng-click="toggleAccount('active')"
-			>Login</button>
-		<button 
-			class="btn btn-lg btn-primary {{ account === 'not-active' ? 'active' : '' }}"
-			ng-click="toggleAccount('not-active')"
-			>Create an Account</button>
-
+	<section ng-show="!isSignedIn">
+		<button class="btn btn-lg btn-primary {{ hasAccount ? 'active' : '' }}" ng-click="hasAccount = true">Login</button>
+		<button class="btn btn-lg btn-primary {{ !hasAccount ? 'active' : '' }}" ng-click="hasAccount = false">Create an Account</button>
 
 		<form>
-			<div class="form-group" ng-show="account === 'not-active'">
+			<div class="form-group" ng-show="!hasAccount">
 				<label>Name</label>
-				<input type="text" class="form-control" ng-model="login.name" placeholder="Name">
+				<input type="text" class="form-control" ng-model="user.name" placeholder="Name">
 			</div>
 
 			<div class="form-group">
 				<label>Email address</label>
-				<input type="email" class="form-control" ng-model="login.email" placeholder="Email">
+				<input type="email" class="form-control" ng-model="user.email" placeholder="Email">
 			</div>
 
 			<div class="form-group">
 				<label>Password</label>
-				<input type="password" class="form-control" ng-model="login.password" placeholder="Password">
+				<input type="password" class="form-control" ng-model="user.password" placeholder="Password">
 			</div>
 
-			<div class="form-group" ng-show="account === 'not-active'">
+			<div class="form-group" ng-show="!hasAccount">
 				<label>Organisation</label>
-				<input type="text" class="form-control" ng-model="login.organisation" placeholder="Org Name">
+				<input type="text" class="form-control" ng-model="user.organisation" placeholder="Org Name">
 			</div>
 
-			<div class="checkbox" ng-show="account === 'not-active'">
-				<label>
-					<input type="checkbox" name="admin" ng-model="login.admin"> Make me admin
-				</label>
+			<div class="checkbox" ng-show="!hasAccount">
+				<label><input type="checkbox" name="admin" ng-model="user.admin"> Make me admin</label>
 			</div>
 
-			<button type="submit" class="btn btn-primary" ng-click="submit()">{{ action }}</button>
+			<div ng-show="error"><p ng-bind="error"></p></div>
+
+			<button type="submit" class="btn btn-primary" ng-click="submit(account)">{{ action }}</button>
 		  
 		</form>
 	</section>
 
-	<section ng-show="loggedIn">
-		<button 
-			class="btn btn-lg btn-primary"
-			ng-click="logout()">log out</button>
+	<section ng-show="isSignedIn">
+		<button class="btn btn-lg btn-primary" ng-click="logout()">log out</button>
 	</section>
 
 </article>

@@ -1,62 +1,46 @@
+import Store from './store.js';
 import Firebase from './firebase.js';
-import TodoControls from './controller_todoControls.js';
+import TodoControls from './todo_controls.js';
 
 class Pages {
 
-	constructor() {
-		this.user;
-		this.isAdmin = false;
-		this.loggedIn = window.sessionStorage.password && window.sessionStorage.email ? true : false;
+	constructor(Store) {
+		this.isAdmin = Store.isAdmin;
 	}
 
 	home($scope, $location, $route) {
+		$scope.isSignedIn 	= Store.isSignedIn
+		$scope.hasAccount 	= false;
+		$scope.user 		= {};
+		$scope.error;
+		$scope.action 		= $scope.hasAccount === true ? 'login' : 'create my account';
 
-		$scope.loggedIn = this.loggedIn;
-
-		let main = $scope;
-		main.heading = 'Welcome Stranger!';
-		main.account = 'not-active';
-		main.action = (main.account === 'active') ? 'login' : 'create my account';
-		main.login = {
-			email: '', 
-			password: '',
-			organisation: '',
-			name: '',
-			admin: false
-		}
-
-		main.toggleAccount = function(status) {
-	  		main.account = status;
-	  		main.action = (status === 'active') ? 'login' : 'create my account';
-		}
-
-		main.submit = function() {
-			if (main.account === 'active') {
-				Firebase.logUserIn(main.login).then((response) => {
-					main.redirect();
-
-				}, (error) => {
-					alert('Sorry, login failed. Try again');
-				});
+		$scope.submit = function(account) {
+			if ($scope.hasAccount) {
+				Firebase.logIn($scope.user).then(
+					(response) => { _redirect($route, $location, 'overview') }, 
+					(error) => {
+						$scope.$apply(function () { 
+							$scope.error = 'Sorry, login failed. Try again';
+						});
+					});
 
 			} else {
-				Firebase.createUser(main.login).then((response) => {
-					main.redirect();
-
-				}, (error) => {
-					console.log('oh crap >>>', error);
-				})
+				Firebase.createUser($scope.login).then(
+					(response) => { _redirect($route, $location, 'overview') }, 
+					(error) => {
+						$scope.$apply(function () { 
+							$scope.error = 'Sorry, something went wrong with your account creation. <br>';
+							$scope.error += 'Your account will be created once we fix the problem. <br>';
+							$scope.error += '- sincerly, Admin'
+							// send fail email to admin with $scope.user details
+						});
+					})
 			}
 		}
 
-		main.logout = function() {
-			Firebase.logUserOut();
-			location.reload();
-		}
-
-		main.redirect = function() {
-			$location.path('overview');
-			$route.reload();
+		$scope.logout = function() {
+			Firebase.logUserOut().then(() => { location.reload() });
 		}
 	};
 
@@ -71,7 +55,7 @@ class Pages {
 			if (!Firebase.user) {
 				Firebase.setupOverviewPage().then((resolve) => {
 					console.log('restarting ...');
-					$route.reload();
+					_redirect($route);
 
 				}, (error) => {
 					alert('Oops something went wrong... this is awkward', error);
@@ -84,7 +68,7 @@ class Pages {
 
 				Firebase.taskUpdate().then((response) => {
 					console.log('restarting ...');
-					$route.reload();
+					_redirect($route);
 
 				}, (reject) => { console.log('No updates to Task Data recieved'); })
 			}
@@ -145,7 +129,7 @@ class Pages {
 
 			// update user list if user list is outdated;
 			Firebase.retrieveUsers().then((response) => {
-				$route.reload();
+				_redirect($route);
 
 			}, (reject) => {
 				console.log('user data not changed', reject);
@@ -172,7 +156,7 @@ class Pages {
 			if (!Firebase.user) {
 				Firebase.setupArchivePage().then((resolve) => {
 					console.log('restarting ...');
-					$route.reload();
+					_redirect($route);
 
 				}, (error) => {
 					alert('Oops something went wrong... this is awkward', error);
@@ -185,7 +169,7 @@ class Pages {
 
 				Firebase.taskUpdate('archive').then((response) => {
 					console.log('archive restarting ...');
-					$route.reload();
+					_redirect($route);
 
 				}, (reject) => { console.log('No updates to Task Data recieved'); })
 			}
@@ -193,4 +177,9 @@ class Pages {
 	};
 }
 
-module.exports = new Pages();
+function _redirect($route, $location, route) {
+	if ($location && route) { $location.path('overview'); }
+	$route.reload();
+}
+
+module.exports = new Pages(Store);

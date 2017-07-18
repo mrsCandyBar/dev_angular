@@ -7,9 +7,7 @@ class Authorize {
 				resolve(response);
 
 			}, (error) => {
-				let errorCode = error.code;
-				let errorMessage = error.message;
-				reject(errorCode + ' : ' + errorMessage)
+				reject(error)
 			});
 		});
 
