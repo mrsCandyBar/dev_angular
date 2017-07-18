@@ -3,7 +3,7 @@ import Pages from './controller_pageControls.js';
 import Beer from './controller_beerControls.js';
 
 import Dashboard from './pages/dashboard.js';
-import TodoControls from './todo_controls.js';
+import TodoControls from './todo/todo_controls.js';
 
 import Store from './store.js';
 import Firebase from './firebase.js';

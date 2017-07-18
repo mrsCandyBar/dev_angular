@@ -23,9 +23,8 @@ class Create {
 			$scope.todo.username = user['name'];
 			$scope.todo.user = user['id'];
 		    Firebase.updateTask($scope.todo);
-		    alert('Todo Created');
-
 		    history.back();
+		    
 		} else {
 			alert('Please select a user');
 		}
