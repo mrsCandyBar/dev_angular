@@ -1,8 +1,8 @@
 
-import Authorize from './firebase/firebase_authorization.js';
-import User from './firebase/firebase_user.js';
-import Query from './firebase/firebase_queries.js';
-import Command from './firebase/firebase_commands.js';
+import Authorize from './firebase_authorization.js';
+import User from './firebase_user.js';
+import Query from './firebase_queries.js';
+import Command from './firebase_commands.js';
 
 class Firebase {
 	
@@ -13,7 +13,6 @@ class Firebase {
     this.tasks;
     this.firebase = initDB();
 		this.database = this.firebase.database();
-		this.credential;
     this.auth = this.firebase.auth();
     
     if (window.sessionStorage.length > 0) {
@@ -34,16 +33,16 @@ class Firebase {
     });
   }
 
-  createUser(user) {
+  create(user) {
     let createUser = new Promise((resolve, reject) => {
-
       User.create(user).then((data) => {
         Command.addUser(this.database, data.uid, user);
 
         this.logIn(user).then((response) => {
           resolve(response);
         }, (error) => {
-          reject('user created but signin failed >>', error);
+          console.log('user created but signIn failed >>', error);
+          reject(error);
         });
         
       }, (error) => {
@@ -56,15 +55,12 @@ class Firebase {
   }
 
 	logIn(user) {
-    let loginUser = new Promise((resolve, reject) => {
-
+    let logInUser = new Promise((resolve, reject) => {
       Authorize.signIn(this.auth, user).then((data) => {
-
         window.sessionStorage.email = user.email;
         window.sessionStorage.password = user.password;
         
         this.userID = firebase.auth().currentUser.uid;
-        this.credential = data;
         resolve('User logged in successfully');
 
       }, (error) => {
@@ -72,17 +68,14 @@ class Firebase {
       });
     });
 
-    return loginUser;
+    return logInUser;
 	}
 
-  logUserOut() {
-    window.sessionStorage.clear();
-
+  logOut() {
     let logOutUser = new Promise((resolve, reject) => {
-
       Authorize.signOut(this.auth).then((data) => {
+        window.sessionStorage.clear();
         this.userID = '';
-        this.credential = '';
         resolve('User logged out successfully');
 
       }, (error) => {
@@ -93,14 +86,11 @@ class Firebase {
     return logOutUser;
   }
 
-  
-
-
   retrieveUserInfo() {
     let dataRetrieved = new Promise((resolve, reject) => {
       Query.data(this.database, 'users/' + this.userID).then((userData) =>{
         this.user = userData;
-        this.searchFilters = this._returnSearchFilters(userData.admin, userData.organisation, this.userID);
+        this.searchFilters = _returnSearchFilters(userData.admin, userData.organisation, this.userID);
         resolve(userData);
 
       }, (error) => {
@@ -109,15 +99,6 @@ class Firebase {
     });
 
     return dataRetrieved
-  }
-
-  _returnSearchFilters(isAdmin, organisation, userId) {
-    let task = {
-        filter: !isAdmin ? 'organisation' : 'user', 
-        value : !isAdmin ? organisation : userId
-      }
-
-    return task;
   }
 
   retrieveTasks(activity) {
@@ -135,32 +116,30 @@ class Firebase {
     return setupTasks;
   }
 
-      _retrieveTasks(location) {
-        let dataRetrieved = new Promise((resolve, reject) => {
-          Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/' + location, this.searchFilters.filter, this.searchFilters.value).then((data) =>{
-            resolve(data);
+    _retrieveTasks(location) {
+      let dataRetrieved = new Promise((resolve, reject) => {
+        Query.dataAndsubscribeToUpdatesForSpecificResults(this.database, '/' + location, this.searchFilters.filter, this.searchFilters.value).then((data) =>{
+          resolve(data);
 
-          }, (error) => {
-            reject(error);
-          });
+        }, (error) => {
+          reject(error);
         });
+      });
 
-        return dataRetrieved
-      }
+      return dataRetrieved
+    }
 
   taskUpdate(location) {
     let taskData = new Promise((resolve, reject) => {
       this._retrieveTasks(location).then((tasks) => {
 
-        let tasksListed = angular.toJson(this.tasks);
-        let newTasksListed = JSON.stringify(tasks);
-
-        if (tasksListed !== newTasksListed) {
+        let updated = _hasListBeenUpdated(this.tasks, tasks);
+        if (updated) {
           this.tasks = tasks;
           resolve('Tasks Updated');
-        } else {
-          reject('No changes to task data');
         }
+        reject('No changes to task data');
+
       }, (error) => {
         reject('User data found but no tasks');
       });
@@ -168,8 +147,6 @@ class Firebase {
 
     return taskData;
   }
-
-      
 
   retrieveUsers() {
     let dataRetrieved = new Promise((resolve, reject) => {
@@ -182,15 +159,12 @@ class Firebase {
           });
         }
 
-        let usersListed = angular.toJson(this.allUsers);
-        let newUsersListed = JSON.stringify(userArray);
-        
-        if (usersListed !== newUsersListed) {
+        let updated = _hasListBeenUpdated(this.allUsers, userArray);
+        if (updated) {
           this.allUsers = userArray;
           resolve(this.allUsers);
-        } else {
-          reject(this.allUsers);
         }
+        reject('No changes to user data');
 
       }, (error) => {
         reject(error);
@@ -205,12 +179,8 @@ class Firebase {
     this.tasks[taskData.id] = taskData;
   }
 
-  moveTaskToArchive(taskData) {
-    Command.moveTask(this.database, taskData.id, taskData, 'archive');
-  }
-
-  reactivateTask(taskData) {
-    Command.moveTask(this.database, taskData.id, taskData, 'tasks');
+  moveTask(taskData, location) {
+    Command.moveTask(this.database, taskData.id, taskData, location);
   }
 
   deleteTask(taskId) {
@@ -230,6 +200,26 @@ function initDB() {
 
   firebase.initializeApp(config);
   return firebase;
+}
+
+function _returnSearchFilters(isAdmin, organisation, userId) {
+  let task = {
+      filter: !isAdmin ? 'organisation' : 'user', 
+      value : !isAdmin ? organisation : userId
+    }
+
+  return task;
+}
+
+function _hasListBeenUpdated(listOld, listNew) {
+  let currentList = angular.toJson(listOld);
+  let newList = JSON.stringify(listNew);
+
+  if (currentList !== newList) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 module.exports = new Firebase();

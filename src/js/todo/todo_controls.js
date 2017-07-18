@@ -15,7 +15,6 @@ class TodoControls {
 	}
 
 	retrieveTodoFilters() {
-		console.log('test');
 		return _retrieve('search');
 	}
 

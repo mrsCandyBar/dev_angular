@@ -1,8 +1,8 @@
 
 class Home {
 
-	constructor(Store) {
-		this.isSignedIn 	= Store.isSignedIn
+	constructor() {
+		this.isSignedIn 	= window.sessionStorage.password && window.sessionStorage.email ? true : false;
 		this.hasAccount 	= false;
 		this.user 			= {};
 		this.error;
@@ -20,7 +20,7 @@ class Home {
 				});
 
 		} else {
-			Firebase.createUser($scope.login).then(
+			Firebase.create($scope.user).then(
 				(response) => { _redirect($route, $location, 'overview') }, 
 				(error) => {
 					$scope.$apply(function () { 
@@ -34,7 +34,7 @@ class Home {
 	}
 
 	logout(Firebase) {
-		Firebase.logUserOut().then(() => { location.reload() });
+		Firebase.logOut().then(() => { location.reload() });
 	}
 }
 

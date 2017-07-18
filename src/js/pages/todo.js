@@ -35,12 +35,12 @@ class Todo {
 
 	archiveTodo($scope, Firebase) {
 		let compareObj = JSON.stringify($scope.todo); 
-		Firebase.moveTaskToArchive(JSON.parse(compareObj));
+		Firebase.moveTask(JSON.parse(compareObj), 'archive');
 	}
 
 	reactivateTodo($scope, Firebase) {
 		let compareObj = JSON.stringify($scope.todo); 
-		Firebase.reactivateTask(JSON.parse(compareObj));
+		Firebase.moveTask(JSON.parse(compareObj), 'tasks');
 	}
 
 	deleteTodo($scope, Firebase) {

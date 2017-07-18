@@ -4,9 +4,8 @@ import Beer from './controller_beerControls.js';
 
 import Dashboard from './pages/dashboard.js';
 import TodoControls from './todo/todo_controls.js';
+import Firebase from './firebase/firebase.js';
 
-import Store from './store.js';
-import Firebase from './firebase.js';
 import AngularUUID from 'angular-uuid';
 
 
@@ -43,7 +42,7 @@ var todoApp = angular.module('myApp', ['ngRoute', 'tabsComponent', 'angular-uuid
 
   // MENU
   todoApp.controller('menuControls',     function($rootScope)                      { Menu.initMenu(this, $rootScope, menuItems) });
-  todoApp.controller('homeControls',     function($scope, $location, $route)       { Pages.home($scope, $location, $route, Store, Firebase); });
+  todoApp.controller('homeControls',     function($scope, $location, $route)       { Pages.home($scope, $location, $route, Firebase); });
   todoApp.controller('aboutControls',    function($scope)                          { Pages.about($scope) });
   todoApp.controller('overviewControls', function($scope, $route)                  { new Dashboard().init(Firebase, TodoControls, $scope, $route, 'tasks')   });
   todoApp.controller('archiveControls',  function($scope, $route)                  { new Dashboard().init(Firebase, TodoControls, $scope, $route, 'archive') });
