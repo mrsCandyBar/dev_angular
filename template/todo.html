@@ -2,13 +2,12 @@
 
   <button class="btn btn-xs btn-default" onclick="history.back()">Back</button>
   <h3 class="contentHolder__todoHolder editable">
-    <span ng-show="!editable">{{ todo.title }}</span>
-    <input ng-show="editable" ng-model="todo.title" /><br>
+    <span ng-show="!editable && isAdmin || !isAdmin">{{ todo.title }}</span>
+    <input ng-show="editable && isAdmin" ng-model="todo.title" /><br>
 
     <div>
-      <span>Task Duration :</span>
-      <span ng-show="!editable">{{ taskDates.start }} - {{ taskDates.end }} ({{ taskDates.total }})</span>
-      <div ng-show="editable" class="form-group col">
+      <span ng-show="!editable && isAdmin || !isAdmin">{{ taskDates.total }}</span>
+      <div ng-show="editable && isAdmin" class="form-group col">
         From <input type="date" ng-model="todo.dateStart" class="date date_start" value="{{ taskDates.start }}"><br>
         To <input type="date" ng-model="todo.dateEnd" class="date date_end" value="{{ taskDates.end }}">
       </div>
@@ -27,6 +26,7 @@
     <small>
       <span ng-show="!editable">{{ todo.status }}</span>
       <div ng-show="editable" class="form-group col">
+        <br><b>Task state: </b><br>
         <span ng-repeat="state in todoStates.status">
           <input type="radio" name="Status" value="{{ state }}" 
             ng-model="todo.status"> {{ state }}<br>
@@ -36,7 +36,7 @@
 
     <small>
       <span ng-show="!editable">( <i>{{ todo.urgency }}</i> )</span>
-      <div ng-show="editable" class="form-group col">
+      <div ng-show="editable && isAdmin" class="form-group col">
         <span ng-repeat="state in todoStates.urgency">
           <input type="radio" name="Urgency" value="{{ state }}" 
             ng-model="todo.urgency"> {{ state }}<br>
@@ -46,8 +46,8 @@
   </h3>
 
   
-  <p ng-show="!editable">{{ todo.description }}</p>
-  <textarea ng-show="editable" class="form-control" ng-model="todo.description"></textarea>
+  <p ng-show="!editable && isAdmin || !isAdmin">{{ todo.description }}</p>
+  <textarea ng-show="editable && isAdmin" class="form-control" ng-model="todo.description"></textarea>
   
   <section class="contentHolder__comments" ng-show="todo.comments > 0">
     <span>{{todoList.remaining()}} of {{todoList.todos.length}} comments</span>

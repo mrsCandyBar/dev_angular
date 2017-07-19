@@ -8,10 +8,13 @@ class Pages {
 		this.isAdmin = Store.isAdmin;
 	}*/
 
-	home($scope, $location, $route, Store, Firebase) {
-		let homeObj = new Home(Store);
+	home($scope, $location, $route, Firebase) {
+		let homeObj = new Home();
 		$scope = _buildScope(homeObj, $scope);
 
+		$scope.$watch('hasAccount',function() {
+			homeObj.toggleAction($scope);
+		}, true);
 		$scope.submit = function() { homeObj.submit(Firebase, $route, $location, $scope); }
 		$scope.logout = function() { homeObj.logout(Firebase); }
 	};

@@ -14,31 +14,28 @@ class Firebase {
     this.firebase = initDB();
 		this.database = this.firebase.database();
     this.auth = this.firebase.auth();
-    
-    if (window.sessionStorage.length > 0) {
-      this.autoLogin();
-    }
 	}
 
-  autoLogin() {
+  autoLogin($route) {
     let user = {
       email : window.sessionStorage.email,
       password : window.sessionStorage.password
     }
 
     this.logIn(user).then((response) => {
-      console.log('auto login passed');
+      $route.reload();
+
     }, (error) => {
       console.log('auto login failed >>>', error);
     });
   }
 
-  create(user) {
+  create(userData) {
     let createUser = new Promise((resolve, reject) => {
-      User.create(user).then((data) => {
-        Command.addUser(this.database, data.uid, user);
+      User.create(userData).then((data) => {
+        Command.addUser(this.database, data.uid, userData);
 
-        this.logIn(user).then((response) => {
+        this.logIn(userData).then((response) => {
           resolve(response);
         }, (error) => {
           console.log('user created but signIn failed >>', error);
@@ -46,7 +43,7 @@ class Firebase {
         });
         
       }, (error) => {
-        reject('Oops something went wrong with your account creation', error);
+        reject(error.message);
       });
 
     });
@@ -104,12 +101,15 @@ class Firebase {
   retrieveTasks(activity) {
     let setupTasks = new Promise((resolve, reject) => {
       this._retrieveTasks(activity).then((tasks) => {
-        this.tasks = tasks;
+        console.log('tasks returned >>>', tasks);
+        if (tasks) {
+          console.log('tasks returned >>> added', tasks);
+          this.tasks = tasks;
+        }
         resolve('Page setup complete');
         
       }, (error) => {
-        reject('User data found but no tasks');
-
+        console.log('data >>> error', error);
       });
     });
 
@@ -175,8 +175,12 @@ class Firebase {
   }
 
   updateTask(taskData) {
-    Command.updateTask(this.database, taskData.id, taskData);
+    console.log('before >>>', this.tasks, taskData);
+    if (!this.tasks) { this.tasks = {} };
     this.tasks[taskData.id] = taskData;
+    console.log('after >>>', taskData);
+    Command.updateTask(this.database, taskData.id, taskData, '');
+    
   }
 
   moveTask(taskData, location) {
@@ -204,8 +208,8 @@ function initDB() {
 
 function _returnSearchFilters(isAdmin, organisation, userId) {
   let task = {
-      filter: !isAdmin ? 'organisation' : 'user', 
-      value : !isAdmin ? organisation : userId
+      filter: isAdmin ? 'organisation' : 'user', 
+      value : isAdmin ? organisation : userId
     }
 
   return task;

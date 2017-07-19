@@ -1,10 +1,10 @@
 <article class="contentHolder">
 
 	<h2 ng-show="user.name">
-		{{ user.name }}<br> 
+		{{ user.name }}
+		<small ng-show="user.admin"><i>(admin)</i></small><br> 
 		<small>{{ user.email }}</small><br>
-		<small>organisation : {{ user.organisation }}</small>
-		<i ng-show="user.admin"><small><small>is admin</small></small></i>
+		<small>org: {{ user.organisation }}</small>
 	</h2>
 
 	<h3 ng-show="taskList.todos && taskList.todos.length > 0"><br>Todos</h3>
@@ -30,7 +30,7 @@
 					{{ todo.title }}
 				</a>
 
-				<small ng-show="user.admin"><i> &nbsp;&nbsp;( by <a href="#">{{ todo.username }}</a>)</i></small>
+				<small ng-show="user.admin"><i> &nbsp;&nbsp;(<a href="#">{{ todo.username }}</a>)</i></small>
 			</li>
 		</ul>
 	</section>
@@ -39,5 +39,5 @@
 	<h3 ng-show="!taskList.todos"><br>Loading</h3>
 
 	<br>
-	<a  ng-show="taskList.todos" href="index.html#!/create" class="btn btn-primary">new todo</a>
+	<a  ng-show="user.admin && taskList.todos" href="index.html#!/create" class="btn btn-primary">new todo</a>
 </article>

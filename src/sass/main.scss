@@ -59,3 +59,12 @@ body {
 		}
 	}
 }
+
+.error { 
+	background: rgba(40,100,40,0.5);
+	color: white;
+	padding: 5px 10px;
+	margin-bottom: 20px;
+	border-radius: 5px;
+	display: inline-block;
+}

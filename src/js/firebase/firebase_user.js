@@ -9,15 +9,14 @@ class User {
 						resolve(data);
 
 					}, (error) => {
-					  	let errorCode = error.code;
-					  	let errorMessage = error.message;
-					  	reject(errorCode + ' : ' + errorMessage)
+						reject(error)
 					});
 			} else {
 				reject('Empty Data');
 			}
 		});
 
+		console.log('return >>>', newUser)
 		return newUser;
 	}
 

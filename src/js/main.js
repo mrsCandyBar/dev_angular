@@ -41,7 +41,14 @@ var todoApp = angular.module('myApp', ['ngRoute', 'tabsComponent', 'angular-uuid
   });
 
   // MENU
-  todoApp.controller('menuControls',     function($rootScope)                      { Menu.initMenu(this, $rootScope, menuItems) });
+  todoApp.controller('menuControls', function($rootScope, $route) { 
+    Menu.initMenu(this, $rootScope, menuItems);
+    
+    if (window.sessionStorage.length > 0) {
+      Firebase.autoLogin($route);
+    }
+  });
+
   todoApp.controller('homeControls',     function($scope, $location, $route)       { Pages.home($scope, $location, $route, Firebase); });
   todoApp.controller('aboutControls',    function($scope)                          { Pages.about($scope) });
   todoApp.controller('overviewControls', function($scope, $route)                  { new Dashboard().init(Firebase, TodoControls, $scope, $route, 'tasks')   });

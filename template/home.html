@@ -31,9 +31,9 @@
 				<label><input type="checkbox" name="admin" ng-model="user.admin"> Make me admin</label>
 			</div>
 
-			<div ng-show="error"><p ng-bind="error"></p></div>
+			<small ng-bind="error" ng-show="error" class="error"></small>
 
-			<button type="submit" class="btn btn-primary" ng-click="submit(account)">{{ action }}</button>
+			<button type="submit" class="btn btn-primary" ng-click="submit(hasAccount)"><span ng-bind="action"></span></button>
 		  
 		</form>
 	</section>
