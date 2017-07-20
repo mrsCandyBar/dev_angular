@@ -21,7 +21,7 @@
       ng-show="editable" 
       ng-model="todo.title" /><br>
 
-    <!-- <div>
+    <div>
       <span ng-show="!editable && isAdmin || !isAdmin">{{ taskDates.total }}</span>
       <div 
         ng-if="isAdmin"
@@ -30,7 +30,7 @@
           From <input type="date" ng-model="todo.dateStart" class="date date_start" value="{{ taskDates.start }}"><br>
           To <input type="date" ng-model="todo.dateEnd" class="date date_end" value="{{ taskDates.end }}">
       </div>
-    </div> -->
+    </div>
 
     <small>
       <span ng-show="!editable">{{ todo.status }}</span>

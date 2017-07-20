@@ -53,7 +53,7 @@ var todoApp = angular.module('myApp', ['ngRoute', 'tabsComponent', 'angular-uuid
   todoApp.controller('aboutControls',    function($scope)                          { Pages.about($scope) });
   todoApp.controller('overviewControls', function($scope, $route)                  { new Dashboard().init(Firebase, TodoControls, $scope, $route, 'tasks')   });
   todoApp.controller('archiveControls',  function($scope, $route)                  { new Dashboard().init(Firebase, TodoControls, $scope, $route, 'archive') });
-  todoApp.controller('todoControls',     function($scope, $route)                  { Pages.todo($scope, $route, Firebase, TodoControls) });
+  todoApp.controller('todoControls',     function($scope, $route, $location)       { Pages.todo($scope, $route, $location, Firebase, TodoControls) });
 
   todoApp.controller('createControls',   function($scope, $route, uuid) { 
     let getUUID = uuid.v4();

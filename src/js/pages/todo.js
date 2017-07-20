@@ -39,10 +39,19 @@ class Todo {
 	    $scope.todo = JSON.parse($scope.backup);
 	}
 
-	moveTodo($scope, Firebase) {
+	moveTodo($scope, Firebase, $route, $location) {
 		let compareObj = JSON.stringify($scope.todo); 
 		let location = $scope.todo.isActive === true ? 'archive' : 'tasks';
 		Firebase.moveTask(JSON.parse(compareObj), location);
+
+		if ($scope.todo.isActive === true) {
+			$location.path(location);
+			$route.reload();
+		} else {
+			$scope.editable = true;
+			$scope.todo.status = 'Waiting';
+		}
+		
 	}
 
 	deleteTodo($scope, Firebase) {

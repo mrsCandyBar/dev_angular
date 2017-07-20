@@ -25,13 +25,13 @@ class Pages {
 		$scope.quote 		= 'In object-oriented programming, the use of interfaces as an architectural pattern to construct modules is known as interface-based programming - Modular Programming found on Wikipedia';
 	};
 
-	todo($scope, $route, Firebase, TodoControls, uuidGen) {
+	todo($scope, $route, $location, Firebase, TodoControls, uuidGen) {
 		let todoObj = new Todo($scope, $route, Firebase, TodoControls);
 		$scope = _buildScope(todoObj, $scope);
 		
 		$scope.update = function() 			{ todoObj.update($scope, Firebase) }
     	$scope.cancel = function() 			{ todoObj.cancel($scope) }
-		$scope.moveTodo = function() 		{ todoObj.moveTodo($scope, Firebase) }
+		$scope.moveTodo = function() 		{ todoObj.moveTodo($scope, Firebase, $route, $location) }
 		$scope.deleteTodo = function() 		{ todoObj.deleteTodo($scope, Firebase) }
 
 		// Comments
