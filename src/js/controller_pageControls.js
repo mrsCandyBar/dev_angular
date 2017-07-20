@@ -31,8 +31,7 @@ class Pages {
 		
 		$scope.update = function() 			{ todoObj.update($scope, Firebase) }
     	$scope.cancel = function() 			{ todoObj.cancel($scope) }
-		$scope.archiveTodo = function() 	{ todoObj.archiveTodo($scope, Firebase) }
-		$scope.reactivateTodo = function() 	{ todoObj.reactivateTodo($scope, Firebase) }
+		$scope.moveTodo = function() 		{ todoObj.moveTodo($scope, Firebase) }
 		$scope.deleteTodo = function() 		{ todoObj.deleteTodo($scope, Firebase) }
 
 		// Comments

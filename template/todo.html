@@ -5,7 +5,7 @@
   <a 
     ng-if="isAdmin"
     ng-show="!editable && todo.status === 'Done'"
-    ng-click="todo.isActive === true ? archiveTodo() : reactivateTodo()"
+    ng-click="moveTodo()"
     class="btn btn-xs btn-primary">{{ todo.isActive === true ? 'Archive' : 'Activate' }}</a>
 
   <a 
