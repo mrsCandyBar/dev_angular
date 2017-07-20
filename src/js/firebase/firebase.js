@@ -3,17 +3,20 @@ import Authorize from './firebase_authorization.js';
 import User from './firebase_user.js';
 import Query from './firebase_queries.js';
 import Command from './firebase_commands.js';
+import Store from './store.js';
 
 class Firebase {
 	
 	constructor() {
-    this.userID;
-		this.user;
+    this.userID = Store.userID;
+		this.user = Store.user;
     this.allUsers;
-    this.tasks;
+    this.tasks = Store.tasks;
     this.firebase = initDB();
 		this.database = this.firebase.database();
     this.auth = this.firebase.auth();
+
+    console.log('tasks >>>', this.tasks);
 	}
 
   autoLogin($route) {
@@ -58,6 +61,7 @@ class Firebase {
         window.sessionStorage.password = user.password;
         
         this.userID = firebase.auth().currentUser.uid;
+        window.sessionStorage.userId = this.userID;
         resolve('User logged in successfully');
 
       }, (error) => {
@@ -87,6 +91,7 @@ class Firebase {
     let dataRetrieved = new Promise((resolve, reject) => {
       Query.data(this.database, 'users/' + this.userID).then((userData) =>{
         this.user = userData;
+        window.sessionStorage.user = JSON.stringify(this.user);
         this.searchFilters = _returnSearchFilters(userData.admin, userData.organisation, this.userID);
         resolve(userData);
 
@@ -103,6 +108,7 @@ class Firebase {
       this._retrieveTasks(activity).then((tasks) => {
         if (tasks) {
           this.tasks = tasks;
+          window.sessionStorage.tasks = JSON.stringify(tasks);
         }
         resolve('Page setup complete');
         
@@ -134,6 +140,7 @@ class Firebase {
         let updated = _hasListBeenUpdated(this.tasks, tasks);
         if (updated) {
           this.tasks = tasks;
+          window.sessionStorage.tasks = JSON.stringify(tasks);
           resolve('Tasks Updated');
         }
         reject('No changes to task data');
