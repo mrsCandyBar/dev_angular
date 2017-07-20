@@ -11,6 +11,20 @@ class Query {
 		return retrievedData;
 	}
 
+	dataWithSpecificResults(database, url, property, value) {
+		let retrievedData = new Promise((resolve) => {
+			database
+				.ref(url)
+				.orderByChild(property)
+				.equalTo(value)
+				.once('value').then(function(snapshot) {
+					resolve(snapshot.val());
+			});
+		});
+
+		return retrievedData;
+	}
+
 	dataAndsubscribeToUpdates(database, url) {
 		let data = new Promise((resolve, reject) => {
 			database.ref(url).on('value', function(snapshot) {

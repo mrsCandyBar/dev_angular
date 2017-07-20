@@ -16,7 +16,6 @@ class User {
 			}
 		});
 
-		console.log('return >>>', newUser)
 		return newUser;
 	}
 

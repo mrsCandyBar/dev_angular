@@ -1,16 +1,22 @@
 
 class Todo {
 
-	constructor(TodoControls, $scope, $route, Firebase) {
+	constructor($scope, $route, Firebase, TodoControls) {
 		this.taskList = TodoControls.retrieveSingleTodo($scope, $route, Firebase);
 		this.todoStates = TodoControls.retrieveTodoStates();
 		this.editable = false;
-		this.isAdmin = Firebase.user.admin;
+
+		this.user = Firebase.user;
+		this.isAdmin = this.user.admin;
+
 		this.taskDates = {
 			start : moment($scope.todo.dateStart).format('YYYY-MM-DD'),
 			end : moment($scope.todo.dateEnd).format('YYYY-MM-DD'),
 			total : moment($scope.todo.dateEnd).fromNow()
 		}
+
+		this.comment = {};
+		this.reply = [];
 	}
 
     update($scope, Firebase) {
@@ -46,6 +52,19 @@ class Todo {
 	deleteTodo($scope, Firebase) {
 		Firebase.deleteTask($scope.todo.id);
 		history.back();
+	}
+
+	// Comments Section
+	addComment($scope, Firebase, uuidGen) {
+		Firebase.addComment($scope.todo.id, $scope.comment, uuidGen.v4());
+	}
+
+	replyToComment($scope, commentId, Firebase, uuidGen) {
+		let buildReply = $scope.reply[commentId];
+		buildReply.from = this.user.id;
+		buildReply.name = this.user.name;
+
+		Firebase.addReplyToComment($scope.todo.id, commentId, buildReply, uuidGen.v4());
 	}
 }
 

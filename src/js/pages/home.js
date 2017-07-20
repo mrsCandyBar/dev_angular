@@ -5,7 +5,7 @@ class Home {
 		this.isSignedIn 	= window.sessionStorage.password && window.sessionStorage.email ? true : false;
 		this.hasAccount 	= false;
 		this.user = {
-			admin : false;
+			admin : false
 		};
 		this.error;
 		this.action 		= 'create my account';

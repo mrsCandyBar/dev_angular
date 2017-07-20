@@ -101,9 +101,7 @@ class Firebase {
   retrieveTasks(activity) {
     let setupTasks = new Promise((resolve, reject) => {
       this._retrieveTasks(activity).then((tasks) => {
-        console.log('tasks returned >>>', tasks);
         if (tasks) {
-          console.log('tasks returned >>> added', tasks);
           this.tasks = tasks;
         }
         resolve('Page setup complete');
@@ -150,7 +148,7 @@ class Firebase {
 
   retrieveUsers() {
     let dataRetrieved = new Promise((resolve, reject) => {
-      Query.data(this.database, 'users/').then((users) => {
+      Query.dataWithSpecificResults(this.database, 'users/', 'organisation', this.user.organisation).then((users) => {
 
         let userArray = [];
         if (users && users !== null && typeof users === 'object') {
@@ -175,10 +173,8 @@ class Firebase {
   }
 
   updateTask(taskData) {
-    console.log('before >>>', this.tasks, taskData);
     if (!this.tasks) { this.tasks = {} };
     this.tasks[taskData.id] = taskData;
-    console.log('after >>>', taskData);
     Command.updateTask(this.database, taskData.id, taskData, '');
     
   }
@@ -189,6 +185,15 @@ class Firebase {
 
   deleteTask(taskId) {
     Command.deleteTask(this.database, taskId, 'tasks');
+  }
+
+  // Comments
+  addComment(taskId, comment, uuid) {
+    Command.addCommentToTask(this.database, taskId, comment, uuid);
+  }
+
+  addReplyToComment(taskId, comment, reply, uuid) {
+    Command.addReplyToCommentInTask(this.database, taskId, comment, reply, uuid);
   }
 }
 

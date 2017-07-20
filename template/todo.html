@@ -1,27 +1,36 @@
 <article class="contentHolder">
 
   <button class="btn btn-xs btn-default" onclick="history.back()">Back</button>
+
+  <a 
+    ng-if="isAdmin"
+    ng-show="!editable"
+    ng-click="todo.isActive === true ? archiveTodo() : reactivateTodo()"
+    class="btn btn-xs btn-primary">{{ todo.isActive === true ? 'Archive' : 'Activate' }}</a>
+
+  <a 
+    ng-if="isAdmin"
+    ng-show="!editable"
+    ng-click="deleteTodo()"
+    class="btn btn-xs btn-primary">Delete</a>
+
   <h3 class="contentHolder__todoHolder editable">
     <span ng-show="!editable && isAdmin || !isAdmin">{{ todo.title }}</span>
-    <input ng-show="editable && isAdmin" ng-model="todo.title" /><br>
+    <input 
+      ng-if="isAdmin"
+      ng-show="editable" 
+      ng-model="todo.title" /><br>
 
     <div>
       <span ng-show="!editable && isAdmin || !isAdmin">{{ taskDates.total }}</span>
-      <div ng-show="editable && isAdmin" class="form-group col">
-        From <input type="date" ng-model="todo.dateStart" class="date date_start" value="{{ taskDates.start }}"><br>
-        To <input type="date" ng-model="todo.dateEnd" class="date date_end" value="{{ taskDates.end }}">
+      <div 
+        ng-if="isAdmin"
+        ng-show="editable" 
+        class="form-group col">
+          From <input type="date" ng-model="todo.dateStart" class="date date_start" value="{{ taskDates.start }}"><br>
+          To <input type="date" ng-model="todo.dateEnd" class="date date_end" value="{{ taskDates.end }}">
       </div>
     </div>
-
-    <a 
-      ng-show="!editable && isAdmin"
-      ng-click="todo.isActive === true ? archiveTodo() : reactivateTodo()"
-      class="btn btn-primary">{{ todo.isActive === true ? 'Archive' : 'Activate' }}</a>
-
-    <a 
-      ng-show="!editable && isAdmin"
-      ng-click="deleteTodo()"
-      class="btn btn-primary">Delete</a>
 
     <small>
       <span ng-show="!editable">{{ todo.status }}</span>
@@ -36,30 +45,62 @@
 
     <small>
       <span ng-show="!editable">( <i>{{ todo.urgency }}</i> )</span>
-      <div ng-show="editable && isAdmin" class="form-group col">
-        <span ng-repeat="state in todoStates.urgency">
-          <input type="radio" name="Urgency" value="{{ state }}" 
-            ng-model="todo.urgency"> {{ state }}<br>
-        </span>
+      <div 
+        ng-if="isAdmin"
+        ng-show="editable" 
+        class="form-group col">
+          <span ng-repeat="state in todoStates.urgency">
+            <input type="radio" name="Urgency" value="{{ state }}" 
+              ng-model="todo.urgency"> {{ state }}<br>
+          </span>
       </div>
     </small> 
   </h3>
 
   
   <p ng-show="!editable && isAdmin || !isAdmin">{{ todo.description }}</p>
-  <textarea ng-show="editable && isAdmin" class="form-control" ng-model="todo.description"></textarea>
+  <textarea 
+    ng-if="isAdmin"
+    ng-show="editable" 
+    class="form-control" 
+    ng-model="todo.description"></textarea>
   
-  <section class="contentHolder__comments" ng-show="todo.comments > 0">
-    <span>{{todoList.remaining()}} of {{todoList.todos.length}} comments</span>
+  <section class="contentHolder__comments" ng-show="isAdmin && todo.comments > 0 || !isAdmin">
+    <span>{{todoList.comments.length}} comments</span>
 
-    <ul class="unstyled">
+
+  <!-- Reply -->
+    <ul 
+      ng-show="todo.comments"
+      class="unstyled">
       <li ng-repeat="comment in todo.comments">
-        <h5>{{ comment.name }}</h5>
-        {{ comment.text }}
+        <h5>{{ comment.name }} said</h5>
+        <p>{{ comment.message }}</p>
 
-        <button class="btn btn-sm btn-default">Reply</button>
+         <!-- Reply to response -->
+        <ul class="unstyled">
+          <li ng-repeat="reply in comment.reply">
+            <h5>{{ reply.name }} said</h5>
+            <p>{{ reply.message }}</p>
+          </li>
+        </ul>
+
+        <article>
+          <h5>reply</h5>
+          <textarea ng-model="reply[comment.id].message" class="form-control"></textarea>
+          <button ng-click="replyToComment(comment.id)" class="btn btn-sm btn-default">Reply</button>
+        </article>
+s
       </li>
     </ul>
+
+    <article>
+      <br><br>
+      <h5>Comment from : {{ comment.name }}</h5>
+      <textarea ng-model="comment.message" class="form-control"></textarea>
+      <button ng-click="addComment()" class="btn btn-sm btn-default">Comment</button>
+    </article>
+    
   </section>
 
   <br><br>
