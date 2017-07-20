@@ -44,9 +44,9 @@ class Command {
 		});
 	}
 
-	deleteTask(database, taskId, newLocation) {
-		let location = newLocation ? newLocation : 'tasks';
+	deleteTask(database, taskId, location) {
 		database.ref(location + '/' + taskId).remove();
+		console.log('task deleted >>>', location)
 	}
 
 	moveTask(database, taskId, taskData, newLocation) {
@@ -59,8 +59,6 @@ class Command {
 
 	// Comments
 	addCommentToTask(database, taskId, commentData, commentId) {
-		console.log('çomment >>', database, taskId, commentData, commentId);
-
 		database.ref('tasks/' + taskId + '/comments/' + commentId).update({
 			id: commentId,
 			from: commentData.from,

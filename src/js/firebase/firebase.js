@@ -183,8 +183,8 @@ class Firebase {
     Command.moveTask(this.database, taskData.id, taskData, location);
   }
 
-  deleteTask(taskId) {
-    Command.deleteTask(this.database, taskId, 'tasks');
+  deleteTask(taskId, location) {
+    Command.deleteTask(this.database, taskId, location);
   }
 
   // Comments

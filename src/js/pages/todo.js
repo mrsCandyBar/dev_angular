@@ -50,7 +50,8 @@ class Todo {
 	}
 
 	deleteTodo($scope, Firebase) {
-		Firebase.deleteTask($scope.todo.id);
+		let location = $scope.todo.isActive === true ? 'tasks' : 'archive';
+		Firebase.deleteTask($scope.todo.id, location);
 		history.back();
 	}
 
