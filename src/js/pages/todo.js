@@ -55,20 +55,20 @@ class Todo {
 	}
 
 	// Comments Section
-	addComment($scope, Firebase, uuidGen) {
+	addComment($scope, Firebase) {
 		let buildComment = $scope.comment;
 		buildComment.from = this.user.id;
 		buildComment.name = this.user.name;
 
-		Firebase.addComment($scope.todo.id, buildComment, uuidGen.v4());
+		Firebase.addComment($scope.todo.id, buildComment, new Date().getTime());
 	}
 
-	replyToComment($scope, commentId, Firebase, uuidGen) {
+	replyToComment($scope, commentId, Firebase) {
 		let buildReply = $scope.reply[commentId];
 		buildReply.from = this.user.id;
 		buildReply.name = this.user.name;
 
-		Firebase.addReplyToComment($scope.todo.id, commentId, buildReply, uuidGen.v4());
+		Firebase.addReplyToComment($scope.todo.id, commentId, buildReply, new Date().getTime());
 	}
 }
 

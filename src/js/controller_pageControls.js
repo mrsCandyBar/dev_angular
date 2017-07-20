@@ -36,8 +36,8 @@ class Pages {
 		$scope.deleteTodo = function() 		{ todoObj.deleteTodo($scope, Firebase) }
 
 		// Comments
-		$scope.addComment = function()		{ todoObj.addComment($scope, Firebase, uuidGen) }
-		$scope.replyToComment = function(commentId)	{ todoObj.replyToComment($scope, commentId, Firebase, uuidGen) }
+		$scope.addComment = function()		{ todoObj.addComment($scope, Firebase) }
+		$scope.replyToComment = function(commentId)	{ todoObj.replyToComment($scope, commentId, Firebase) }
 	};
 
 	create($scope, $route, uuid, Firebase, TodoControls) {
