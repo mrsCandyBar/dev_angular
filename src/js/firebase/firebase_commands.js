@@ -59,6 +59,8 @@ class Command {
 
 	// Comments
 	addCommentToTask(database, taskId, commentData, commentId) {
+		console.log('çomment >>', database, taskId, commentData, commentId);
+
 		database.ref('tasks/' + taskId + '/comments/' + commentId).update({
 			id: commentId,
 			from: commentData.from,

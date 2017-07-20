@@ -56,7 +56,11 @@ class Todo {
 
 	// Comments Section
 	addComment($scope, Firebase, uuidGen) {
-		Firebase.addComment($scope.todo.id, $scope.comment, uuidGen.v4());
+		let buildComment = $scope.comment;
+		buildComment.from = this.user.id;
+		buildComment.name = this.user.name;
+
+		Firebase.addComment($scope.todo.id, buildComment, uuidGen.v4());
 	}
 
 	replyToComment($scope, commentId, Firebase, uuidGen) {
