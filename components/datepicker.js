@@ -8,8 +8,7 @@ angular.module('datePickerComponent', [])
       scope: {},
       controller: function($scope, $element) {
 
-      	// Create MonthDaysObj
-      	$scope._createDays = function(monthTitle, amount) {
+      	$scope.dp_createDays = function(monthTitle, amount) {
 			let month = {
 				title: monthTitle,
 				days: [],
@@ -21,8 +20,7 @@ angular.module('datePickerComponent', [])
 			return month;
 		}
 
-		// Create YearsObj
-		$scope._createYears = function(currentYear, amount) {
+		$scope.dp_createYears = function(currentYear, amount) {
 			let year = []
 			for( let i = 0; i < amount; i++) { 
 				year[i] = currentYear + i; 
@@ -30,102 +28,105 @@ angular.module('datePickerComponent', [])
 			return year;
 		}
 
-		// Setup Properties for DatePicker
-      	$scope.dateComponents = {
-      		days: [
-      			'Sun',
-      			'Mon',
-      			'Tue',
-      			'Wed',
-      			'Thu',
-      			'Fri',
-      			'Sat'
-      		],
+      	$scope.dp__Controls = {
+      		days: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
       		months: [
-	      		$scope._createDays('January', 	31),
-	      		$scope._createDays('February', 	29),
-				$scope._createDays('March', 	31),
-				$scope._createDays('April', 	30),
-				$scope._createDays('May', 		31),
-				$scope._createDays('June', 		30),
-				$scope._createDays('July', 		31),
-				$scope._createDays('August', 	31),
-				$scope._createDays('September', 30),
-				$scope._createDays('October', 	31),
-				$scope._createDays('November', 	30),
-				$scope._createDays('December', 	31)
+	      		$scope.dp_createDays('January',  31),
+	      		$scope.dp_createDays('February', 29),
+				$scope.dp_createDays('March', 	 31),
+				$scope.dp_createDays('April',  	 30),
+				$scope.dp_createDays('May', 	 31),
+				$scope.dp_createDays('June', 	 30),
+				$scope.dp_createDays('July', 	 31),
+				$scope.dp_createDays('August', 	 31),
+				$scope.dp_createDays('September', 30),
+				$scope.dp_createDays('October',  31),
+				$scope.dp_createDays('November', 30),
+				$scope.dp_createDays('December', 31)
 			],
-			years: $scope._createYears(new Date().getFullYear(), 8),
-
-			selectedYear: new Date().getFullYear(),
-			selectedMonth: new Date().getMonth() + 1,
-			selectedDay: new Date().getDate(),
-			selectedDate: new Date(),
+			years: $scope.dp_createYears(new Date().getFullYear(), 8),
+			selected: {
+				year: 	new Date().getFullYear(),
+				month: 	new Date().getMonth() + 1,
+				day: 	new Date().getDate(),
+				date: 	new Date()
+			},
 
 			dateSelection: ['year','month','day'],
 			openSelection: ''
 		}
-		_calculateDayMonthStartsOn($scope.dateComponents.selectedMonth);
 
-		$scope._showOptions = function(option) {
-        	$scope.dateComponents.openSelection = $scope.dateComponents.openSelection === option ? '' : option;
+		_dp_calculateDayMonthStartsOn(
+			$scope.dp__Controls['selected']['month']
+		);
+
+
+		$scope.dp_showOptions = function(option) {
+			if ($scope.dp__Controls['openSelection'] === option) {
+				$scope.dp__Controls['openSelection'] =  '';
+			} else {
+	        	$scope.dp__Controls['openSelection'] =  option;
+	        }
         }
 
 		// Update DOM with values selected
-        $scope.setDate = function(value) {
+        $scope.dp_setDate = function(value) {
         	if (value) {
-	        	if ($scope.dateComponents.openSelection === 'year') {
-	        		$scope.dateComponents.selectedYear = value;
-
-	        	} else if ($scope.dateComponents.openSelection === 'month') {
-	        		$scope.dateComponents.selectedMonth = value;
-	        		_calculateDayMonthStartsOn($scope.dateComponents.selectedMonth - 1);
+	        	if ($scope.dp__Controls['openSelection'] === 'year') {
+	        		$scope.dp__Controls['selected']['year'] = value;
+	        	} 
+	        	else if ($scope.dp__Controls['openSelection'] === 'month') {
+	        		$scope.dp__Controls['selected']['month'] = value;
+	        		_dp_calculateDayMonthStartsOn($scope.dp__Controls['selected']['month'] - 1);
 
 	        	} else {
-	        		$scope.dateComponents.selectedDay = value;
+	        		$scope.dp__Controls['selected']['day'] = value;
 	        	}
 
-	          _update();
+	          _dp_update();
 	      	}
         }
 
-        function _update() {
+        function _dp_update() {
         	let createDate = '';
-        	createDate += $scope.dateComponents.selectedYear + '-';
-        	createDate += $scope.dateComponents.selectedMonth + '-';
-        	createDate += $scope.dateComponents.selectedDay;
+        	createDate += $scope.dp__Controls['selected']['year'] + '-';
+        	createDate += $scope.dp__Controls['selected']['month'] + '-';
+        	createDate += $scope.dp__Controls['selected']['day'];
 
-        	_isLeapYear($scope.dateComponents.selectedYear);
-        	$scope.dateComponents.selectedDate = createDate;
-        	$scope.dateComponents.openSelection = '';
+        	_dp_isLeapYear($scope.dp__Controls['selected']['year']);
+        	$scope.dp__Controls['selected']['date'] = createDate;
+        	$scope.dp__Controls['openSelection'] = '';
         }
 
-        function _calculateDayMonthStartsOn(month) {
-        	let selectedMonth = $scope.dateComponents.selectedMonth - 1;
-        	let date = new Date();
-        	date.setFullYear($scope.dateComponents.selectedYear, selectedMonth,1);
+        function _dp_calculateDayMonthStartsOn(month) {
 
-        	$scope.dateComponents.months[selectedMonth].placeholder = [];
+        	let date = new Date();
+        	let selectedMonth = $scope.dp__Controls['selected']['month'] - 1;
+        	date.setFullYear($scope.dp__Controls['selected']['year'], selectedMonth,1);
+
+        	let _placeHolder = $scope.dp__Controls['months'][selectedMonth]['placeholder'];
+        	_placeHolder = [];
         	for (let i = 1; i < date.getDay(); i++) {
-        		$scope.dateComponents.months[selectedMonth].placeholder.unshift(i);
+        		_placeHolder.unshift(i);
         	}
 
-        	if ($scope.dateComponents.selectedDay > $scope.dateComponents.months[$scope.dateComponents.selectedMonth - 1].days.length) {
-    			$scope.dateComponents.openSelection = '';
-    			$scope.setDate($scope.dateComponents.months[$scope.dateComponents.selectedMonth - 1].days.length - 1);
+        	let _selectedMonth = $scope.dp__Controls['selected']['month'] - 1
+        	if ($scope.dp__Controls['selected']['day'] > $scope.dp__Controls['months'][_selectedMonth]['days'].length) {
+    			$scope.dp__Controls['openSelection'] = '';
+    			$scope.dp_setDate($scope.dp__Controls['months'][_selectedMonth]['days'].length - 1);
     		}
         }
 
-        function _isLeapYear(year) {
+        function _dp_isLeapYear(year) {
         	if (year % 4 == 0 && year % 100 != 0 || 
         		year % 400 == 0) {
-         		if ($scope.dateComponents.months[1].days.length < 30) {
-		    	 	$scope.dateComponents.months[1].days[29] = 29;
+         		if ($scope.dp__Controls['months'][1]['days'].length < 30) {
+		    	 	$scope.dp__Controls['months'][1]['days'][29] = 29;
 		    	} 
 		    	
 		    } else {
-		    	if ($scope.dateComponents.months[1].days.length > 29) {
-		    		$scope.dateComponents.months[1].days.splice(29,1);
+		    	if ($scope.dp__Controls['months'][1]['days'].length > 29) {
+		    		$scope.dp__Controls['months'][1]['days'].splice(29,1);
 		    	}
 		    };
         }
@@ -134,38 +135,38 @@ angular.module('datePickerComponent', [])
         '<div class="dp__holder">' +
 
         	'<h3>' +
-        		'<a ng-click="_showOptions(dateComponents.dateSelection[0])">{{ dateComponents.selectedYear }}</a> - ' +
-        		'<a ng-click="_showOptions(dateComponents.dateSelection[1])">{{ dateComponents.selectedMonth }}</a> - ' +
-        		'<a ng-click="_showOptions(dateComponents.dateSelection[2])">{{ dateComponents.selectedDay }}</a>' +
+        		'<a ng-click="dp_showOptions(dp__Controls[\'dateSelection\'][0])">{{ dp__Controls[\'selected\'][\'year\'] }}</a> - ' +
+        		'<a ng-click="dp_showOptions(dp__Controls[\'dateSelection\'][1])">{{ dp__Controls[\'selected\'][\'month\'] }}</a> - ' +
+        		'<a ng-click="dp_showOptions(dp__Controls[\'dateSelection\'][2])">{{ dp__Controls[\'selected\'][\'day\'] }}</a>' +
         	'</h3>' +
 
-        	'<ul class="dp__dateYear" ng-show="dateComponents.openSelection === dateComponents.dateSelection[0]">' +
-	            '<li ng-repeat="year in dateComponents.years" ng-click="setDate(year)" ' +
-	            	'class="{{ dateComponents.selectedYear === year ? \'active\' : \'\' }}">' +
+        	'<ul class="dp__dateYear" ng-show="dp__Controls[\'openSelection\'] === dp__Controls[\'dateSelection\'][0]">' +
+	            '<li ng-repeat="year in dp__Controls[\'years\']" ng-click="dp_setDate(year)" ' +
+	            	'class="{{ dp__Controls.selectedYear === year ? \'active\' : \'\' }}">' +
 	            	'<a>{{ year }}</a>' +
 	            '</li>' +
             '</ul>' +
 
-        	'<ul class="dp__dateTitle" ng-show="dateComponents.openSelection === dateComponents.dateSelection[1]">' +
-	            '<li ng-repeat="month in dateComponents.months" ng-click="setDate($index + 1)"' +
-	            	'class="{{ dateComponents.selectedMonth === $index + 1 ? \'active\' : \'\' }}">' +
+        	'<ul class="dp__dateTitle" ng-show="dp__Controls[\'openSelection\'] === dp__Controls[\'dateSelection\'][1]">' +
+	            '<li ng-repeat="month in dp__Controls[\'months\']" ng-click="dp_setDate($index + 1)"' +
+	            	'class="{{ dp__Controls.selectedMonth === $index + 1 ? \'active\' : \'\' }}">' +
 	            	'<a>{{ month.title }}</a>' +
 	            '</li>' +
 	        '</ul>' +
 
 
-	        '<ul class="dp__dateDay" ng-show="dateComponents.openSelection === dateComponents.dateSelection[2]">' +
-	            '<li ng-repeat="day in dateComponents.days"><a>{{ day }} </a></li>' +
+	        '<ul class="dp__dateDay" ng-show="dp__Controls[\'openSelection\'] === dp__Controls[\'dateSelection\'][2]">' +
+	            '<li ng-repeat="day in dp__Controls[\'days\']"><a>{{ day }} </a></li>' +
 	        '</ul>' +
 
-	        '<ul class="dp__dateMonth__holder" ng-show="dateComponents.openSelection === dateComponents.dateSelection[2]">' +
-	            '<li ng-repeat="day in dateComponents.months[(dateComponents.selectedMonth - 1)].placeholder">' +
+	        '<ul class="dp__dateMonth__holder" ng-show="dp__Controls[\'openSelection\'] === dp__Controls[\'dateSelection\'][2]">' +
+	            '<li ng-repeat="day in dp__Controls[\'months\'][(dp__Controls[\'selected\'][\'month\'] - 1)][\'placeholder\']">' +
 	          		'<a>&nbsp;</a>' +
 	          	'</li>' +
 
-	            '<li ng-repeat="day in dateComponents.months[(dateComponents.selectedMonth - 1)].days" ng-click="setDate(dateComponents.months[(dateComponents.selectedMonth - 1)].days[day])"' +
-	            	'class="{{ dateComponents.selectedDay === dateComponents.months[(dateComponents.selectedMonth - 1)].days[day] ? \'active\' : \'\' }}">' +
-	          		'<a>&nbsp;{{ dateComponents.months[(dateComponents.selectedMonth - 1)].days[day] }}</a>' +
+	            '<li ng-repeat="day in dp__Controls.months[(dp__Controls[\'selected\'][\'month\'] - 1)].days" ng-click="dp_setDate(dp__Controls.months[(dp__Controls[\'selected\'][\'month\'] - 1)][\'days\'][day])"' +
+	            	'class="{{ dp__Controls[\'selected\'][\'day\'] === dp__Controls[\'months\'][(dp__Controls[\'selected\'][\'month\'] - 1)][\'days\'][day] ? \'active\' : \'\' }}">' +
+	          		'<a>&nbsp;{{ dp__Controls.months[(dp__Controls[\'selected\'][\'month\'] - 1)][\'days\'][day] }}</a>' +
 	          	'</li>' +
 	        '</ul>' +
 
