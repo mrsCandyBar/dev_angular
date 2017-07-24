@@ -5,14 +5,13 @@ class Todo {
 		this.taskList = TodoControls.retrieveSingleTodo($scope, $route, Firebase);
 		this.todoStates = TodoControls.retrieveTodoStates();
 		this.editable = false;
-
 		this.user = Firebase.user;
 		this.isAdmin = this.user.admin;
 
 		this.taskDates = {
-			start : moment($scope.todo.dateStart).format('YYYY-MM-DD'),
-			end : moment($scope.todo.dateEnd).format('YYYY-MM-DD'),
-			total : moment($scope.todo.dateEnd).fromNow()
+			start : this.taskList.dateStart,
+			end : this.taskList.dateEnd,
+			total : moment(this.taskList.dateEnd).fromNow()
 		}
 
 		this.comment = {};
@@ -31,6 +30,7 @@ class Todo {
 	        $scope.backup = JSON.stringify($scope.todo);
 	    }
 
+	    $scope.taskDates.total = moment($scope.todo.dateEnd).fromNow();
 	    $scope.editable = !$scope.editable;
 	}
 

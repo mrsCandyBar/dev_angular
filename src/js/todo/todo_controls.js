@@ -25,6 +25,8 @@ class TodoControls {
     retrieveSingleTodo($scope, $route, store) {
     	$scope.todo = store.tasks[$route.current.params.id];
 	    $scope.todo = _retrieve('single', $scope.todo);
+
+	    return $scope.todo;
     }
 
     createTodo($route, uuid, user) {

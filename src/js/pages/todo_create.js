@@ -22,6 +22,7 @@ class Create {
 			let user = JSON.parse($scope.todo.user);
 			$scope.todo.username = user['name'];
 			$scope.todo.user = user['id'];
+			console.log('todo >>>', $scope.todo);
 		    Firebase.updateTask($scope.todo);
 		    history.back();
 		    

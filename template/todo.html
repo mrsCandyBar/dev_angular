@@ -27,8 +27,8 @@
         ng-if="isAdmin"
         ng-show="editable" 
         class="form-group col">
-          From <input type="date" ng-model="todo.dateStart" class="date date_start" value="{{ taskDates.start }}"><br>
-          To <input type="date" ng-model="todo.dateEnd" class="date date_end" value="{{ taskDates.end }}">
+          From <datepicker info="todo.dateStart"></datepicker>
+          To <datepicker info="todo.dateEnd"></datepicker>
       </div>
     </div>
 

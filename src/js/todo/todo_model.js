@@ -14,8 +14,8 @@ class TodoModel extends ModelProto {
 		this.urgency = 'Waiting';
 		this.comments = 0;
 		this.isActive = true;
-		this.dateStart = new Date();
-		this.dateEnd = new Date();
+		this.dateStart = '';
+		this.dateEnd = '';
 		this.createModel(rawObj);
 	}
 

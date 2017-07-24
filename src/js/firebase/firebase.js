@@ -7,12 +7,13 @@ import Command from './firebase_commands.js';
 class Firebase {
 	
 	constructor() {
-    window.sessionStorage.userID  ? this.userID = window.sessionStorage.userID            : this.userID;
-		window.sessionStorage.user    ? this.user = JSON.parse(window.sessionStorage.user)    : this.user;
-    window.sessionStorage.tasks   ? this.tasks = JSON.parse(window.sessionStorage.tasks)  : this.tasks;
+    window.sessionStorage.userID        ? this.userID = window.sessionStorage.userID                            : this.userID;
+		window.sessionStorage.user          ? this.user = JSON.parse(window.sessionStorage.user)                    : this.user;
+    window.sessionStorage.tasks         ? this.tasks = JSON.parse(window.sessionStorage.tasks)                  : this.tasks;
+    window.sessionStorage.searchFilters ? this.searchFilters = JSON.parse(window.sessionStorage.searchFilters)  : this.searchFilters;
     this.allUsers;
     this.firebase = initDB();
-		this.database = this.firebase.database();
+		this.database = this.firebase.database()
     this.auth = this.firebase.auth();
 	}
 
@@ -91,6 +92,7 @@ class Firebase {
         window.sessionStorage.user = JSON.stringify(this.user);
         
         this.searchFilters = _returnSearchFilters(userData.admin, userData.organisation, this.userID);
+        window.sessionStorage.searchFilters = JSON.stringify(this.searchFilters);
         resolve(userData);
 
       }, (error) => {
@@ -135,6 +137,7 @@ class Firebase {
     let taskData = new Promise((resolve, reject) => {
       this._retrieveTasks(location).then((tasks) => {
 
+        console.log('tasks >>>', tasks);
         let updated = _hasListBeenUpdated(this.tasks, tasks);
         if (updated) {
           this.tasks = tasks;
@@ -144,6 +147,7 @@ class Firebase {
         reject('No changes to task data');
 
       }, (error) => {
+        console.log('tasks >>>', error);
         reject('User data found but no tasks');
       });
     })
