@@ -12,7 +12,7 @@ import AngularUUID from 'angular-uuid';
 // Set single menu items
 // differentiate between string and obj for dropdown items {page: 'about', list: []}
 var menuItems = Menu.buildMenu(['home', 'about', 'overview', 'archive']);
-var todoApp = angular.module('myApp', ['ngRoute', 'tabsComponent', 'angular-uuid'])
+var todoApp = angular.module('myApp', ['ngRoute', 'tabsComponent', 'datePickerComponent', 'angular-uuid'])
 
   .config(function($routeProvider) { 
     

@@ -3,20 +3,17 @@ import Authorize from './firebase_authorization.js';
 import User from './firebase_user.js';
 import Query from './firebase_queries.js';
 import Command from './firebase_commands.js';
-import Store from './store.js';
 
 class Firebase {
 	
 	constructor() {
-    this.userID = Store.userID;
-		this.user = Store.user;
+    window.sessionStorage.userID  ? this.userID = window.sessionStorage.userID            : this.userID;
+		window.sessionStorage.user    ? this.user = JSON.parse(window.sessionStorage.user)    : this.user;
+    window.sessionStorage.tasks   ? this.tasks = JSON.parse(window.sessionStorage.tasks)  : this.tasks;
     this.allUsers;
-    this.tasks = Store.tasks;
     this.firebase = initDB();
 		this.database = this.firebase.database();
     this.auth = this.firebase.auth();
-
-    console.log('tasks >>>', this.tasks);
 	}
 
   autoLogin($route) {
@@ -27,7 +24,6 @@ class Firebase {
 
     this.logIn(user).then((response) => {
       $route.reload();
-
     }, (error) => {
       console.log('auto login failed >>>', error);
     });
@@ -76,6 +72,7 @@ class Firebase {
     let logOutUser = new Promise((resolve, reject) => {
       Authorize.signOut(this.auth).then((data) => {
         window.sessionStorage.clear();
+
         this.userID = '';
         resolve('User logged out successfully');
 
@@ -92,6 +89,7 @@ class Firebase {
       Query.data(this.database, 'users/' + this.userID).then((userData) =>{
         this.user = userData;
         window.sessionStorage.user = JSON.stringify(this.user);
+        
         this.searchFilters = _returnSearchFilters(userData.admin, userData.organisation, this.userID);
         resolve(userData);
 

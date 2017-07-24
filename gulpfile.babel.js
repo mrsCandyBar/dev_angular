@@ -11,6 +11,7 @@ var paths = {
   sass: 'src/sass/',
   dest_sass: 'build/css/',
   pages: '*.html',
+  components: 'components/*.js'
 };
 
 gulp.task('webpacker', function() {
@@ -46,7 +47,7 @@ gulp.task('pageReload', () => {
 gulp.task('watch', function() {
   livereload.listen();
 
-  gulp.watch([paths.scripts + '*.js', paths.scripts + '/*/*.js'], ['webpacker']);
+  gulp.watch([paths.scripts + '*.js', paths.scripts + '/*/*.js', paths.components], ['webpacker']);
   gulp.watch(paths.sass + '*.scss', ['sass']);
   gulp.watch(paths.pages, ['pageReload']);
 });
