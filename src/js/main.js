@@ -45,6 +45,7 @@ var todoApp = angular.module('myApp', ['ngRoute', 'tabsComponent', 'datePickerCo
     Menu.initMenu(this, $rootScope, menuItems);
     
     if (window.sessionStorage.length > 0) {
+      this.loggedIn = true;
       Firebase.autoLogin($route);
     }
   });
